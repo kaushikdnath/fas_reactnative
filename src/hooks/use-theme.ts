@@ -4,11 +4,11 @@
  */
 
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useThemeMode } from '@/hooks/theme-mode-context';
 
+/** Resolves the *effective* theme: the user's Settings-screen choice
+ *  (light/dark/system) takes precedence over the raw OS scheme. */
 export function useTheme() {
-  const scheme = useColorScheme();
-  const theme = scheme === 'unspecified' ? 'light' : scheme;
-
-  return Colors[theme];
+  const { resolvedScheme } = useThemeMode();
+  return Colors[resolvedScheme];
 }
