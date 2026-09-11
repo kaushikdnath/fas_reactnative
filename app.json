@@ -1,0 +1,14 @@
+{
+  "expo": {
+    "name": "Attendance AS608",
+    "slug": "attendance-as608",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "attendance",
+    "userInterfaceStyle": "automatic",
+    "plugins": ["expo-router", "expo-sqlite", "./plugins/withAs608"],
+    "android": {"package": "com.kaushikdnath.fas"},
+    "experiments": {"typedRoutes": true}
+  }
+}

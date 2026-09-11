@@ -1,0 +1,2 @@
+export type SmsConfig={baseUrl:string;token:string};
+export async function sendSms(config:SmsConfig,numbers:string[],message:string){if(!config.baseUrl||!config.token) throw new Error('SMS gateway is not configured'); const r=await fetch(config.baseUrl.replace(/\/$/, '')+'/send',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${config.token}`},body:JSON.stringify({numbers,message})}); const text=await r.text(); if(!r.ok) throw new Error(text||`SMS gateway HTTP ${r.status}`); return text;}
