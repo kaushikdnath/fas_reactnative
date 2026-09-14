@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, View } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 
 import { deleteBatch, getBatch } from '@/data/batch-repository';
@@ -8,6 +8,7 @@ import { logAudit } from '@/data/audit-repository';
 import { AppBar, goBack } from '@/components/ui/app-bar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { EmptyStateView, ErrorView, LoadingView } from '@/components/ui/state-views';
 import { ListRow } from '@/components/ui/list-row';
@@ -142,10 +143,16 @@ export default function BatchDetail() {
 
 function ToggleRow({ label, value, onChange, disabled }: { label: string; value: boolean; onChange: (v: boolean) => void; disabled?: boolean }) {
   return (
-    <View style={[styles.toggleRow, disabled && styles.toggleRowDisabled]}>
+    <Pressable
+      style={[styles.toggleRow, disabled && styles.toggleRowDisabled]}
+      onPress={() => !disabled && onChange(!value)}
+      disabled={disabled}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked: value, disabled }}
+    >
       <ThemedText type="body" style={styles.toggleLabel}>{label}</ThemedText>
-      <Button label={value ? 'On' : 'Off'} variant={value ? 'tonal' : 'outlined'} onPress={() => !disabled && onChange(!value)} />
-    </View>
+      <Checkbox checked={value} onChange={onChange} disabled={disabled} />
+    </Pressable>
   );
 }
 

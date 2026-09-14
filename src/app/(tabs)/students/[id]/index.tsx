@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { FlatList, Modal, ScrollView, StyleSheet, View } from 'react-native';
+import { FlatList, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 
 import { deleteStudent, getStudent, moveStudentToBatch } from '@/data/student-repository';
@@ -12,6 +12,7 @@ import { AppBar, goBack } from '@/components/ui/app-bar';
 import { Avatar } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { ErrorView, LoadingView } from '@/components/ui/state-views';
 import { ListRow } from '@/components/ui/list-row';
@@ -197,10 +198,15 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 
 function ToggleRow({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
   return (
-    <View style={styles.toggleRow}>
+    <Pressable
+      style={styles.toggleRow}
+      onPress={() => onChange(!value)}
+      accessibilityRole="checkbox"
+      accessibilityState={{ checked: value }}
+    >
       <ThemedText type="body" style={styles.toggleLabel}>{label}</ThemedText>
-      <Button label={value ? 'On' : 'Off'} variant={value ? 'tonal' : 'outlined'} onPress={() => onChange(!value)} />
-    </View>
+      <Checkbox checked={value} onChange={onChange} />
+    </Pressable>
   );
 }
 

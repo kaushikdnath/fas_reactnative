@@ -1,8 +1,9 @@
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { ThemeModeProvider, useThemeMode } from '@/hooks/theme-mode-context';
+import { DatabaseProvider, LoadingProvider } from "@/context";
+import { ThemeModeProvider, useThemeMode } from "@/hooks/theme-mode-context";
 
 /**
  * Root stack. The primary five sections live inside the `(tabs)` group
@@ -25,13 +26,20 @@ function RootStack() {
   const { resolvedScheme } = useThemeMode();
   return (
     <>
-      <StatusBar style={resolvedScheme === 'dark' ? 'light' : 'dark'} />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="device" options={{ presentation: 'card' }} />
-        <Stack.Screen name="fingerprints" options={{ presentation: 'card' }} />
-        <Stack.Screen name="sms-log" options={{ presentation: 'card' }} />
-      </Stack>
+      <StatusBar style={resolvedScheme === "dark" ? "light" : "dark"} />
+      <LoadingProvider>
+        <DatabaseProvider>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="device" options={{ presentation: "card" }} />
+            <Stack.Screen
+              name="fingerprints"
+              options={{ presentation: "card" }}
+            />
+            <Stack.Screen name="sms-log" options={{ presentation: "card" }} />
+          </Stack>
+        </DatabaseProvider>
+      </LoadingProvider>
     </>
   );
 }

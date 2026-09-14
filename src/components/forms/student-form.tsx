@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
+import { Directory, File, Paths } from 'expo-file-system';
 import { Image, Pressable, ScrollView, StyleSheet, Switch, View } from 'react-native';
 
 import { AppBar, goBack } from '@/components/ui/app-bar';
@@ -101,13 +101,15 @@ export function StudentForm({
     const isNewPhoto = photoUri && photoUri !== initial?.photoUri;
     if (isNewPhoto) {
       try {
-        const dir = `${FileSystem.documentDirectory}photos/`;
-        const info = await FileSystem.getInfoAsync(dir);
-        if (!info.exists) await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
+        const photosDir = new Directory(Paths.document, 'photos');
+        if (!photosDir.exists) {
+          photosDir.create({ intermediates: true, idempotent: true });
+        }
         const ext = photoUri!.split('.').pop()?.split('?')[0] || 'jpg';
-        const dest = `${dir}${code.trim() || 'student'}.${ext}`;
-        await FileSystem.copyAsync({ from: photoUri!, to: dest });
-        persistedPhotoUri = dest;
+        const sourceFile = new File(photoUri!);
+        const destFile = new File(photosDir, `${code.trim() || 'student'}.${ext}`);
+        await sourceFile.copy(destFile, { overwrite: true });
+        persistedPhotoUri = destFile.uri;
       } catch (e) {
         Logger.e('photo copy failed', e);
       }
