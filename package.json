@@ -43,7 +43,8 @@
     "lint": "expo lint",
     "clean": "expo prebuild --clean",
     "build": "expo prebuild -p android && expo run:android",
-    "start": "adb reverse tcp:8081 tcp:8081 && expo start --dev-client"
+    "start": "expo start --dev-client",
+    "adbfix": "adb reverse tcp:8081 tcp:8081"
   },
   "private": true
 }

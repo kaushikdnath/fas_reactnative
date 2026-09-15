@@ -1,9 +1,17 @@
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, TextInput, View } from "react-native";
 
-import { Radius, Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { Radius, Spacing } from "@/constants/theme";
+import { useTheme } from "@/hooks/use-theme";
 
-export function SearchBar({ value, onChangeText, placeholder = 'Search' }: { value: string; onChangeText: (v: string) => void; placeholder?: string }) {
+export function SearchBar({
+  value,
+  onChangeText,
+  placeholder = "Search",
+}: {
+  value: string;
+  onChangeText: (v: string) => void;
+  placeholder?: string;
+}) {
   const theme = useTheme();
   return (
     <View style={[styles.wrap, { backgroundColor: theme.backgroundElement }]}>
@@ -12,7 +20,7 @@ export function SearchBar({ value, onChangeText, placeholder = 'Search' }: { val
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor={theme.outline}
-        style={[styles.input, { color: theme.text }]}
+        style={[styles.input, { color: theme.text, fontSize: 15 }]}
         autoCapitalize="none"
       />
     </View>
