@@ -2,11 +2,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type SmsConfig = { baseUrl: string; token: string };
 export type ThemeModePref = 'system' | 'light' | 'dark';
+export type PalettePref = 'blue-teal' | 'deep-blue';
 
 const KEYS = {
   smsBaseUrl: 'sms.baseUrl',
   smsToken: 'sms.token',
   themeMode: 'app.themeMode',
+  themePalette: 'app.themePalette',
   institutionName: 'app.institutionName',
   autoSmsOnAttendance: 'app.autoSmsOnAttendance',
 } as const;
@@ -29,6 +31,15 @@ export async function getThemeMode(): Promise<ThemeModePref> {
 
 export async function saveThemeMode(mode: ThemeModePref): Promise<void> {
   await AsyncStorage.setItem(KEYS.themeMode, mode);
+}
+
+export async function getThemePalette(): Promise<PalettePref> {
+  const v = await AsyncStorage.getItem(KEYS.themePalette);
+  return v === 'deep-blue' ? 'deep-blue' : 'blue-teal';
+}
+
+export async function saveThemePalette(palette: PalettePref): Promise<void> {
+  await AsyncStorage.setItem(KEYS.themePalette, palette);
 }
 
 export async function getInstitutionName(): Promise<string> {

@@ -1,23 +1,28 @@
 import { NativeTabs } from "expo-router/unstable-native-tabs";
 
-import { Colors } from "@/constants/theme";
-import { useColorScheme } from "@/hooks/use-color-scheme";
+import { useTheme } from "@/hooks/use-theme";
 
 /**
  * Native bottom tab bar (Android: Material 3 BottomNavigationView,
- * powered by expo-router's native-tabs integration) -- no extra
- * navigation or icon-set dependency required. `md` icon names are
- * Android Material Symbols, resolved by the OS at runtime.
+ * powered by expo-router's native-tabs integration) -- styled with the
+ * dynamic theme tokens for seamless dark/light and palette switching.
  */
 export default function TabLayout() {
-  const scheme = useColorScheme();
-  const colors = Colors[scheme === "unspecified" || !scheme ? "light" : scheme];
+  const colors = useTheme();
 
   return (
     <NativeTabs
       backgroundColor={colors.surface}
-      tintColor={colors.primary}
-      labelStyle={{ color: colors.textSecondary }}
+      tintColor={colors.tabBarIconSelected}
+      indicatorColor={colors.tabBarIndicator}
+      iconColor={{
+        default: colors.tabBarIcon,
+        selected: colors.tabBarIconSelected,
+      }}
+      labelStyle={{
+        default: { color: colors.textSecondary },
+        selected: { color: colors.tabBarIconSelected, fontWeight: "600" },
+      }}
     >
       <NativeTabs.Trigger name="index">
         <NativeTabs.Trigger.Icon md="grid_view" />

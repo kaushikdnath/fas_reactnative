@@ -130,7 +130,13 @@ export default function StudentList() {
         onChangeText={setQuery}
         placeholder="Search name, code, or guardian mobile"
       />
-      <View style={{ flexDirection: "row", marginBottom: 20 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          marginBottom: 20,
+          paddingHorizontal: Spacing.three,
+        }}
+      >
         <Chip
           key={String(batchOptions[0].value)}
           label={batchOptions[0].label}
@@ -144,7 +150,13 @@ export default function StudentList() {
           onSelect={setBatchFilter}
         />
       </View>
-      <View style={{ flexDirection: "row", marginBottom: 20 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          marginBottom: 20,
+          paddingHorizontal: Spacing.three,
+        }}
+      >
         <Chip
           key={String(statusOptions[0].value)}
           label={statusOptions[0].label}

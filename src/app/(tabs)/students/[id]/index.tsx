@@ -154,7 +154,15 @@ export default function StudentDetail() {
         <Button label="Delete student" variant="danger" onPress={() => setDeleteVisible(true)} style={styles.deleteBtn} />
       </ScrollView>
 
-      <Modal visible={moveVisible} transparent animationType="fade" onRequestClose={() => setMoveVisible(false)}>
+      <Modal
+        visible={moveVisible}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        navigationBarTranslucent
+        hardwareAccelerated
+        onRequestClose={() => setMoveVisible(false)}
+      >
         <View style={styles.backdrop}>
           <ThemedView type="surface" style={styles.moveCard}>
             <ThemedText type="subtitle" style={styles.moveTitle}>Move to batch</ThemedText>
@@ -227,7 +235,15 @@ const styles = StyleSheet.create({
   sectionLabel: { marginTop: Spacing.three, marginBottom: Spacing.two },
   emptyInline: { marginBottom: Spacing.two },
   deleteBtn: { marginTop: Spacing.five },
-  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: Spacing.four },
+  backdrop: {
+    ...StyleSheet.absoluteFill,
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    padding: Spacing.four,
+  },
   moveCard: { borderRadius: Radius.xlarge, padding: Spacing.four, maxHeight: '70%' },
   moveTitle: { marginBottom: Spacing.two },
   moveList: { marginBottom: Spacing.two },

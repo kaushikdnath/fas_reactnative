@@ -40,7 +40,7 @@ export function ThemedText({ style, type = 'default', themeColor, ...rest }: The
         type === 'smallBold' && styles.smallBold,
         type === 'label' && styles.label,
         type === 'link' && styles.link,
-        type === 'linkPrimary' && styles.linkPrimary,
+        type === 'linkPrimary' && [styles.linkPrimary, { color: theme.primary }],
         type === 'code' && styles.code,
         style,
       ]}
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   smallBold: { fontSize: 13, lineHeight: 18, fontWeight: '700' },
   label: { fontSize: 12, lineHeight: 16, fontWeight: '600', letterSpacing: 0.4 },
   link: { lineHeight: 22, fontSize: 14 },
-  linkPrimary: { lineHeight: 22, fontSize: 14, color: '#3c87f7' },
+  linkPrimary: { lineHeight: 22, fontSize: 14 },
   code: {
     fontFamily: Fonts?.mono,
     fontWeight: Platform.select({ android: '700' as const }) ?? '500',

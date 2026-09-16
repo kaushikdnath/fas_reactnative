@@ -5,13 +5,40 @@ import { ThemedView } from '@/components/themed-view';
 import { Radius, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
-export function StatCard({ label, value, tone = 'neutral', onPress }: { label: string; value: string; tone?: 'primary' | 'success' | 'warning' | 'error' | 'neutral'; onPress?: () => void }) {
+export function StatCard({
+  label,
+  value,
+  tone = 'neutral',
+  onPress,
+}: {
+  label: string;
+  value: string;
+  tone?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'neutral';
+  onPress?: () => void;
+}) {
   const theme = useTheme();
-  const valueColor = tone === 'primary' ? theme.primary : tone === 'success' ? theme.success : tone === 'warning' ? theme.warning : tone === 'error' ? theme.error : theme.text;
+  const valueColor =
+    tone === 'primary'
+      ? theme.primary
+      : tone === 'secondary'
+        ? theme.secondary
+        : tone === 'success'
+          ? theme.success
+          : tone === 'warning'
+            ? theme.warning
+            : tone === 'error'
+              ? theme.error
+              : theme.text;
 
   return (
     <Pressable onPress={onPress} style={styles.pressable} disabled={!onPress}>
-      <ThemedView type="surface" style={styles.card}>
+      <ThemedView
+        type="surface"
+        style={[
+          styles.card,
+          { borderWidth: 1, borderColor: theme.outlineVariant + '50' },
+        ]}
+      >
         <ThemedText type="headline" style={{ color: valueColor }} numberOfLines={1}>
           {value}
         </ThemedText>
