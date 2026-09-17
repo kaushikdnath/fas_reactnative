@@ -28,7 +28,15 @@ export function ConfirmDialog({
   children?: React.ReactNode;
 }) {
   return (
-    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      statusBarTranslucent
+      navigationBarTranslucent
+      hardwareAccelerated
+      onRequestClose={onCancel}
+    >
       <View style={styles.backdrop}>
         <ThemedView type="surface" style={styles.card}>
           <ThemedText type="subtitle" style={styles.title}>
@@ -46,7 +54,15 @@ export function ConfirmDialog({
 }
 
 const styles = StyleSheet.create({
-  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', padding: Spacing.four },
+  backdrop: {
+    ...StyleSheet.absoluteFill,
+    flex: 1,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    padding: Spacing.four,
+  },
   card: { borderRadius: Radius.xlarge, padding: Spacing.four },
   title: { marginBottom: Spacing.three },
   actions: { flexDirection: 'row', justifyContent: 'flex-end', gap: Spacing.two, marginTop: Spacing.three },

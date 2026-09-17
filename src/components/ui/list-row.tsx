@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Radius, Spacing } from '@/constants/theme';
+import { useTheme } from '@/hooks/use-theme';
 
 export function ListRow({
   title,
@@ -17,10 +18,19 @@ export function ListRow({
   trailing?: React.ReactNode;
   onPress?: () => void;
 }) {
+  const theme = useTheme();
+
   return (
     <Pressable onPress={onPress} disabled={!onPress}>
       {({ pressed }) => (
-        <ThemedView type="surface" style={[styles.row, pressed && styles.pressed]}>
+        <ThemedView
+          type="surface"
+          style={[
+            styles.row,
+            { borderWidth: 1, borderColor: theme.outlineVariant + '40' },
+            pressed && styles.pressed,
+          ]}
+        >
           {leading}
           <View style={styles.textWrap}>
             <ThemedText type="bodyBold" numberOfLines={1}>

@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import {
+  Dimensions,
   Modal,
   Platform,
   Pressable,
@@ -31,7 +32,6 @@ import Animated, {
 import { ThemedText } from "@/components/themed-text";
 import { Radius, Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
-import { useColorScheme } from "react-native";
 
 export type LoadingOptions = {
   /** Text message displayed below the loading animation */
@@ -239,7 +239,14 @@ export function LoadingOverlay({
   onCancel?: () => void;
 }) {
   const theme = useTheme();
-  const colorScheme = useColorScheme();
+  const [screenDim, setScreenDim] = useState(() => Dimensions.get('screen'));
+
+  useEffect(() => {
+    const sub = Dimensions.addEventListener('change', ({ screen }) => {
+      setScreenDim(screen);
+    });
+    return () => sub.remove();
+  }, []);
 
   if (!visible) return null;
 
@@ -249,6 +256,8 @@ export function LoadingOverlay({
       transparent
       animationType="fade"
       statusBarTranslucent
+      navigationBarTranslucent
+      hardwareAccelerated
       onRequestClose={() => {
         if (cancelable && onCancel) {
           onCancel();
@@ -256,7 +265,13 @@ export function LoadingOverlay({
       }}
     >
       <Pressable
-        style={styles.backdrop}
+        style={[
+          styles.backdrop,
+          {
+            width: screenDim.width,
+            height: screenDim.height,
+          },
+        ]}
         onPress={() => {
           if (cancelable && onCancel) {
             onCancel();
@@ -281,7 +296,7 @@ export function LoadingOverlay({
           >
             <LoadingSpinner
               size={50}
-              color={colorScheme === "dark" ? "#FFFFFF" : "#000000"}
+              color={theme.primary}
             />
             {message ? (
               <ThemedText
@@ -430,8 +445,11 @@ export function useLoading(): LoadingContextType {
 
 const styles = StyleSheet.create({
   backdrop: {
+    ...StyleSheet.absoluteFill,
     flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.45)",
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
     justifyContent: "center",
     alignItems: "center",
     padding: Spacing.four,

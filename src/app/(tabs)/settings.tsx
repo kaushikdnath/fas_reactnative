@@ -20,11 +20,11 @@ import { TextField } from '@/components/ui/text-field';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Spacing } from '@/constants/theme';
-import type { ThemeModePref } from '@/services/settings';
+import type { PalettePref, ThemeModePref } from '@/services/settings';
 
 export default function Settings() {
   const insets = useSafeAreaInsets();
-  const { mode, setMode } = useThemeMode();
+  const { mode, setMode, palette, setPalette } = useThemeMode();
 
   const [institutionName, setInstitutionName] = useState('');
   const [baseUrl, setBaseUrl] = useState('');
@@ -64,6 +64,16 @@ export default function Settings() {
           options={[{ value: 'system' as ThemeModePref, label: 'System' }, { value: 'light' as ThemeModePref, label: 'Light' }, { value: 'dark' as ThemeModePref, label: 'Dark' }]}
           selected={mode}
           onSelect={setMode}
+        />
+
+        <ThemedText type="label" themeColor="textSecondary" style={styles.sectionLabel}>COLOR PALETTE</ThemedText>
+        <ChipRow
+          options={[
+            { value: 'blue-teal' as PalettePref, label: 'Blue + Teal' },
+            { value: 'deep-blue' as PalettePref, label: 'Deep Blue + White' },
+          ]}
+          selected={palette}
+          onSelect={setPalette}
         />
 
         <ThemedText type="label" themeColor="textSecondary" style={styles.sectionLabel}>INSTITUTION</ThemedText>

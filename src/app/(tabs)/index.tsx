@@ -49,7 +49,7 @@ export default function Dashboard() {
 
         <View style={styles.grid}>
           <StatCard label="Students" value={stats ? String(stats.students) : '\u2014'} tone="primary" onPress={() => router.push('/students')} />
-          <StatCard label="Batches" value={stats ? String(stats.batches) : '\u2014'} tone="primary" onPress={() => router.push('/batches')} />
+          <StatCard label="Batches" value={stats ? String(stats.batches) : '\u2014'} tone="secondary" onPress={() => router.push('/batches')} />
           <StatCard label="Present today" value={stats ? String(stats.presentToday) : '\u2014'} tone="success" onPress={() => router.push('/attendance')} />
           <StatCard label="Failed SMS" value={stats ? String(stats.pendingSms) : '\u2014'} tone={stats && stats.pendingSms > 0 ? 'error' : 'neutral'} onPress={() => router.push('/sms-log')} />
         </View>
