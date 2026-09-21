@@ -4,11 +4,31 @@
     "slug": "attendance-as608",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icons/icon.png",
     "scheme": "attendance",
     "userInterfaceStyle": "automatic",
-    "plugins": ["expo-router", "expo-sqlite", "./plugins/withAs608"],
-    "android": {"package": "com.kaushikdnath.fas"},
-    "experiments": {"typedRoutes": true}
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "./plugins/withAs608",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/icons/icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#fff",
+          "imageWidth": 220
+        }
+      ]
+    ],
+    "android": {
+      "package": "com.kaushikdnath.fas",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/icons/adaptive-foreground.png",
+        "backgroundColor": "#fff",
+        "imageWidth": 100
+      }
+    },
+    "experiments": { "typedRoutes": true }
   }
 }
