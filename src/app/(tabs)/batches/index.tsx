@@ -1,10 +1,9 @@
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import PageHeader from "@/components/PageHeader";
 import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
 import { Badge } from "@/components/ui/badge";
 import { Fab } from "@/components/ui/fab";
 import { ListRow } from "@/components/ui/list-row";
@@ -38,24 +37,8 @@ export default function BatchList() {
     }, [load]),
   );
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await load();
-    setRefreshing(false);
-  };
-  const insets = useSafeAreaInsets();
-
   return (
-    <ThemedView style={styles.page}>
-      <View style={[styles.header, { paddingTop: insets.top + Spacing.two }]}>
-        <ThemedText type="title">Batches</ThemedText>
-        <ThemedText type="body" themeColor="textSecondary">
-          {batches
-            ? `${batches.length} batch${batches.length === 1 ? "" : "es"}`
-            : " "}
-        </ThemedText>
-      </View>
-
+    <PageHeader title="Batches" onRefresh={load} scrollable={false}>
       {batches === null && !error ? (
         <LoadingView message="Loading batches\u2026" />
       ) : error ? (
@@ -74,7 +57,7 @@ export default function BatchList() {
           keyExtractor={(b) => String(b.id)}
           contentContainerStyle={styles.list}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            <RefreshControl refreshing={refreshing} onRefresh={load} />
           }
           renderItem={({ item }) => (
             <ListRow
@@ -95,7 +78,7 @@ export default function BatchList() {
       )}
 
       <Fab onPress={() => router.push("/batches/new")} />
-    </ThemedView>
+    </PageHeader>
   );
 }
 
