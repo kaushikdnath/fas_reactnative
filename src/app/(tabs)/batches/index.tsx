@@ -2,8 +2,9 @@ import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, RefreshControl, StyleSheet, View } from "react-native";
 
-import PageHeader from "@/components/PageHeader";
+import PageContainer from "@/components/PageContainer";
 import { ThemedText } from "@/components/themed-text";
+import { AppBar } from "@/components/ui/AppBar";
 import { Badge } from "@/components/ui/badge";
 import { Fab } from "@/components/ui/fab";
 import { ListRow } from "@/components/ui/list-row";
@@ -38,47 +39,50 @@ export default function BatchList() {
   );
 
   return (
-    <PageHeader title="Batches" onRefresh={load} scrollable={false}>
-      {batches === null && !error ? (
-        <LoadingView message="Loading batches\u2026" />
-      ) : error ? (
-        <ErrorView message={error} onRetry={load} />
-      ) : batches!.length === 0 ? (
-        <EmptyStateView
-          icon="U+1F600"
-          title="No batches yet"
-          subtitle="Create your first batch to start enrolling students."
-          actionLabel="Create batch"
-          onAction={() => router.push("/batches/new")}
-        />
-      ) : (
-        <FlatList
-          data={batches!}
-          keyExtractor={(b) => String(b.id)}
-          contentContainerStyle={styles.list}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={load} />
-          }
-          renderItem={({ item }) => (
-            <ListRow
-              title={item.name}
-              subtitle={item.academicYear}
-              onPress={() => router.push(`/batches/${item.id}`)}
-              trailing={
-                <View style={styles.trailing}>
-                  <ThemedText type="bodyBold">{item.studentCount}</ThemedText>
-                  {!item.active ? (
-                    <Badge label="Inactive" tone="warning" />
-                  ) : null}
-                </View>
-              }
-            />
-          )}
-        />
-      )}
+    <>
+      <AppBar title="Batches" subtitle="Manage your batches" />
+      <PageContainer onRefresh={load} scrollable={false}>
+        {batches === null && !error ? (
+          <LoadingView message="Loading batches\u2026" />
+        ) : error ? (
+          <ErrorView message={error} onRetry={load} />
+        ) : batches!.length === 0 ? (
+          <EmptyStateView
+            icon="U+1F600"
+            title="No batches yet"
+            subtitle="Create your first batch to start enrolling students."
+            actionLabel="Create batch"
+            onAction={() => router.push("/batches/new")}
+          />
+        ) : (
+          <FlatList
+            data={batches!}
+            keyExtractor={(b) => String(b.id)}
+            contentContainerStyle={styles.list}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={load} />
+            }
+            renderItem={({ item }) => (
+              <ListRow
+                title={item.name}
+                subtitle={item.academicYear}
+                onPress={() => router.push(`/batches/${item.id}`)}
+                trailing={
+                  <View style={styles.trailing}>
+                    <ThemedText type="bodyBold">{item.studentCount}</ThemedText>
+                    {!item.active ? (
+                      <Badge label="Inactive" tone="warning" />
+                    ) : null}
+                  </View>
+                }
+              />
+            )}
+          />
+        )}
 
-      <Fab onPress={() => router.push("/batches/new")} />
-    </PageHeader>
+        <Fab onPress={() => router.push("/batches/new")} />
+      </PageContainer>
+    </>
   );
 }
 

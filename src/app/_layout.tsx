@@ -2,7 +2,6 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import AppHeader from "@/components/AppHeader";
 import { DatabaseProvider, LoadingProvider } from "@/context";
 import { ThemeModeProvider, useThemeMode } from "@/hooks/theme-mode-context";
 import { useTheme } from "@/hooks/use-theme";
@@ -26,7 +25,7 @@ function RootStack() {
       <StatusBar style={resolvedScheme === "dark" ? "light" : "dark"} />
       <LoadingProvider>
         <DatabaseProvider>
-          <AppHeader />
+          {/* <AppHeader /> */}
           <Stack
             screenOptions={{
               headerShown: false,

@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import PageContainer from "@/components/PageContainer";
+import { AppBar } from "@/components/ui/AppBar";
 import { Avatar } from "@/components/ui/avatar";
 import { Chip, ChipRow } from "@/components/ui/chip";
 import { Fab } from "@/components/ui/fab";
@@ -95,9 +95,7 @@ export default function StudentList() {
   );
 
   const onRefresh = async () => {
-    setRefreshing(true);
     await fetchPage(0, false);
-    setRefreshing(false);
   };
   const loadMore = () => {
     if (!loadingMore && hasMore) fetchPage(page + 1, true);
@@ -117,114 +115,110 @@ export default function StudentList() {
   ];
 
   return (
-    <ThemedView style={styles.page}>
-      <View style={[styles.header, { paddingTop: insets.top + Spacing.two }]}>
-        <ThemedText type="title">Students</ThemedText>
-        <ThemedText type="body" themeColor="textSecondary">
-          {totalCount} total
-        </ThemedText>
-      </View>
+    <>
+      <AppBar title="Students" subtitle="Manage your students" />
+      <PageContainer onRefresh={onRefresh}>
+        <SearchBar
+          value={query}
+          onChangeText={setQuery}
+          placeholder="Search name, code, or guardian mobile"
+        />
+        <View
+          style={{
+            flexDirection: "row",
+            marginBottom: 20,
+            paddingHorizontal: Spacing.three,
+          }}
+        >
+          <Chip
+            key={String(batchOptions[0].value)}
+            label={batchOptions[0].label}
+            selected={"all" === batchFilter}
+            onPress={() => setBatchFilter(batchOptions[0].value)}
+            styleCss={{ flex: 1, maxWidth: 70 }}
+          />
+          <ChipRow
+            options={batchOptions.filter((b) => b.value !== "all")}
+            selected={batchFilter}
+            onSelect={setBatchFilter}
+          />
+        </View>
+        <View
+          style={{
+            flexDirection: "row",
+            marginBottom: 20,
+            paddingHorizontal: Spacing.three,
+          }}
+        >
+          <Chip
+            key={String(statusOptions[0].value)}
+            label={statusOptions[0].label}
+            selected={"all" === statusFilter}
+            onPress={() => setStatusFilter(statusOptions[0].value)}
+            styleCss={{ flex: 1, maxWidth: 70 }}
+          />
+          <ChipRow
+            options={statusOptions.filter((b) => b.value !== "all")}
+            selected={statusFilter}
+            onSelect={setStatusFilter}
+          />
+        </View>
 
-      <SearchBar
-        value={query}
-        onChangeText={setQuery}
-        placeholder="Search name, code, or guardian mobile"
-      />
-      <View
-        style={{
-          flexDirection: "row",
-          marginBottom: 20,
-          paddingHorizontal: Spacing.three,
-        }}
-      >
-        <Chip
-          key={String(batchOptions[0].value)}
-          label={batchOptions[0].label}
-          selected={"all" === batchFilter}
-          onPress={() => setBatchFilter(batchOptions[0].value)}
-          styleCss={{ flex: 1, maxWidth: 70 }}
-        />
-        <ChipRow
-          options={batchOptions.filter((b) => b.value !== "all")}
-          selected={batchFilter}
-          onSelect={setBatchFilter}
-        />
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-          marginBottom: 20,
-          paddingHorizontal: Spacing.three,
-        }}
-      >
-        <Chip
-          key={String(statusOptions[0].value)}
-          label={statusOptions[0].label}
-          selected={"all" === statusFilter}
-          onPress={() => setStatusFilter(statusOptions[0].value)}
-          styleCss={{ flex: 1, maxWidth: 70 }}
-        />
-        <ChipRow
-          options={statusOptions.filter((b) => b.value !== "all")}
-          selected={statusFilter}
-          onSelect={setStatusFilter}
-        />
-      </View>
+        {loading && students.length === 0 ? (
+          <LoadingView message="Loading students\u2026" />
+        ) : error ? (
+          <ErrorView message={error} onRetry={() => fetchPage(0, false)} />
+        ) : students.length === 0 ? (
+          <EmptyStateView
+            icon="\uD83D\uDD0D"
+            title="No students found"
+            subtitle="Try a different search, or add a new student."
+            actionLabel="Add student"
+            onAction={() => router.push("/students/new")}
+          />
+        ) : (
+          <FlatList
+            data={students}
+            keyExtractor={(s) => String(s.id)}
+            contentContainerStyle={styles.list}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            onEndReachedThreshold={0.4}
+            onEndReached={loadMore}
+            ListFooterComponent={
+              loadingMore ? (
+                <ActivityIndicator style={styles.footerLoader} />
+              ) : null
+            }
+            renderItem={({ item }) => (
+              <ListRow
+                title={item.name}
+                subtitle={`${item.code} \u00B7 ${item.batchName ?? "Unassigned"}`}
+                leading={
+                  <Avatar name={item.name} uri={item.photoUri} size={44} />
+                }
+                onPress={() => router.push(`/students/${item.id}`)}
+              />
+            )}
+          />
+        )}
 
-      {loading && students.length === 0 ? (
-        <LoadingView message="Loading students\u2026" />
-      ) : error ? (
-        <ErrorView message={error} onRetry={() => fetchPage(0, false)} />
-      ) : students.length === 0 ? (
-        <EmptyStateView
-          icon="\uD83D\uDD0D"
-          title="No students found"
-          subtitle="Try a different search, or add a new student."
-          actionLabel="Add student"
-          onAction={() => router.push("/students/new")}
-        />
-      ) : (
-        <FlatList
-          data={students}
-          keyExtractor={(s) => String(s.id)}
-          contentContainerStyle={styles.list}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <Fab
+          label="+"
+          onPress={() =>
+            router.push(
+              batchFilter === "all"
+                ? "/students/new"
+                : {
+                    pathname: "/students/new",
+                    params: { batchId: String(batchFilter) },
+                  },
+            )
           }
-          onEndReachedThreshold={0.4}
-          onEndReached={loadMore}
-          ListFooterComponent={
-            loadingMore ? (
-              <ActivityIndicator style={styles.footerLoader} />
-            ) : null
-          }
-          renderItem={({ item }) => (
-            <ListRow
-              title={item.name}
-              subtitle={`${item.code} \u00B7 ${item.batchName ?? "Unassigned"}`}
-              leading={
-                <Avatar name={item.name} uri={item.photoUri} size={44} />
-              }
-              onPress={() => router.push(`/students/${item.id}`)}
-            />
-          )}
         />
-      )}
-
-      <Fab
-        label="+"
-        onPress={() =>
-          router.push(
-            batchFilter === "all"
-              ? "/students/new"
-              : {
-                  pathname: "/students/new",
-                  params: { batchId: String(batchFilter) },
-                },
-          )
-        }
-      />
-    </ThemedView>
+      </PageContainer>
+    </>
   );
 }
 

@@ -3,8 +3,9 @@ import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import PageContainer from "@/components/PageContainer";
 import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
+import { AppBar } from "@/components/ui/AppBar";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -152,114 +153,113 @@ export default function Attendance() {
   };
 
   return (
-    <ThemedView style={styles.page}>
-      <View style={[styles.header, { paddingTop: insets.top + Spacing.two }]}>
-        <ThemedText type="title">Attendance</ThemedText>
-      </View>
-
-      <View
-        style={{
-          flexDirection: "row",
-          marginBottom: 20,
-          paddingHorizontal: Spacing.three,
-        }}
-      >
-        <Chip
-          label="Fingerprint scan"
-          key="scan"
-          selected={mode === "scan"}
-          onPress={() => setMode("scan")}
-          styleCss={{ flex: 1, width: "auto", height: 40 }}
-        />
-        <Chip
-          label="Manual entry"
-          key="manual"
-          selected={mode === "manual"}
-          onPress={() => setMode("manual")}
-          styleCss={{ flex: 1, width: "auto", height: 40 }}
-        />
-      </View>
-
-      {mode === "scan" ? (
-        <View style={styles.scanCard}>
-          <ThemedText type="subtitle">{statusText}</ThemedText>
-          {resultLine ? (
-            <ThemedText
-              type="body"
-              themeColor={scanState === "error" ? "error" : "success"}
-              style={styles.resultLine}
-            >
-              {resultLine}
-            </ThemedText>
-          ) : null}
-          <Button
-            label={
-              scanState === "scanning" ? "Scanning\u2026" : "Scan fingerprint"
-            }
-            onPress={handleScan}
-            loading={scanState === "scanning"}
-            disabled={scanState === "scanning"}
-            style={styles.scanBtn}
+    <>
+      <AppBar title="Attendance" subtitle="Record student attendance" />
+      <PageContainer>
+        <View
+          style={{
+            flexDirection: "row",
+            marginBottom: 20,
+            paddingHorizontal: Spacing.three,
+          }}
+        >
+          <Chip
+            label="Fingerprint scan"
+            key="scan"
+            selected={mode === "scan"}
+            onPress={() => setMode("scan")}
+            styleCss={{ flex: 1, width: "auto", height: 40 }}
           />
-          <Button
-            label="Open device settings"
-            variant="text"
-            onPress={() => router.push("/device")}
+          <Chip
+            label="Manual entry"
+            key="manual"
+            selected={mode === "manual"}
+            onPress={() => setMode("manual")}
+            styleCss={{ flex: 1, width: "auto", height: 40 }}
           />
         </View>
-      ) : (
-        <View style={styles.manualCard}>
-          <SearchBar
-            value={query}
-            onChangeText={setQuery}
-            placeholder="Search name, code, or guardian mobile"
-          />
-          {searchResults.map((s) => (
-            <ListRow
-              key={s.id}
-              title={s.name}
-              subtitle={`${s.code} \u00B7 ${s.batchName ?? ""}`}
-              leading={<Avatar name={s.name} uri={s.photoUri} size={40} />}
-              onPress={() => handleManualPick(s)}
-            />
-          ))}
-        </View>
-      )}
 
-      <ThemedText
-        type="label"
-        themeColor="textSecondary"
-        style={styles.sectionLabel}
-      >
-        TODAY&apos;S LOG
-      </ThemedText>
-      {today.length === 0 ? (
-        <EmptyStateView icon="\uD83D\uDCCB" title="No attendance yet today" />
-      ) : (
-        <FlatList
-          data={today}
-          keyExtractor={(a) => String(a.id)}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
-            <ListRow
-              title={item.studentName}
-              subtitle={item.batchName}
-              trailing={
-                <Badge
-                  label={
-                    item.outTime
-                      ? `Out ${fmtTime(item.outTime)}`
-                      : `In ${fmtTime(item.inTime)}`
-                  }
-                  tone={item.outTime ? "neutral" : "success"}
-                />
+        {mode === "scan" ? (
+          <View style={styles.scanCard}>
+            <ThemedText type="subtitle">{statusText}</ThemedText>
+            {resultLine ? (
+              <ThemedText
+                type="body"
+                themeColor={scanState === "error" ? "error" : "success"}
+                style={styles.resultLine}
+              >
+                {resultLine}
+              </ThemedText>
+            ) : null}
+            <Button
+              label={
+                scanState === "scanning" ? "Scanning\u2026" : "Scan fingerprint"
               }
-              onPress={() => router.push(`/students/${item.studentId}`)}
+              onPress={handleScan}
+              loading={scanState === "scanning"}
+              disabled={scanState === "scanning"}
+              style={styles.scanBtn}
             />
-          )}
-        />
-      )}
-    </ThemedView>
+            <Button
+              label="Open device settings"
+              variant="text"
+              onPress={() => router.push("/device")}
+            />
+          </View>
+        ) : (
+          <View style={styles.manualCard}>
+            <SearchBar
+              value={query}
+              onChangeText={setQuery}
+              placeholder="Search name, code, or guardian mobile"
+            />
+            {searchResults.map((s) => (
+              <ListRow
+                key={s.id}
+                title={s.name}
+                subtitle={`${s.code} \u00B7 ${s.batchName ?? ""}`}
+                leading={<Avatar name={s.name} uri={s.photoUri} size={40} />}
+                onPress={() => handleManualPick(s)}
+              />
+            ))}
+          </View>
+        )}
+
+        <ThemedText
+          type="label"
+          themeColor="textSecondary"
+          style={styles.sectionLabel}
+        >
+          TODAY&apos;S LOG
+        </ThemedText>
+        {today.length === 0 ? (
+          <EmptyStateView icon="\uD83D\uDCCB" title="No attendance yet today" />
+        ) : (
+          <FlatList
+            data={today}
+            keyExtractor={(a) => String(a.id)}
+            contentContainerStyle={styles.list}
+            renderItem={({ item }) => (
+              <ListRow
+                title={item.studentName}
+                subtitle={item.batchName}
+                trailing={
+                  <Badge
+                    label={
+                      item.outTime
+                        ? `Out ${fmtTime(item.outTime)}`
+                        : `In ${fmtTime(item.inTime)}`
+                    }
+                    tone={item.outTime ? "neutral" : "success"}
+                  />
+                }
+                onPress={() => router.push(`/students/${item.studentId}`)}
+              />
+            )}
+          />
+        )}
+      </PageContainer>
+    </>
   );
 }
 

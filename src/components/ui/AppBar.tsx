@@ -8,7 +8,7 @@ import { Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 
 type AppBarProps = {
-  title: string;
+  title?: string;
   subtitle?: string;
   showBack?: boolean;
   action?: ReactNode;
@@ -21,7 +21,6 @@ export function AppBar({
   subtitle,
   showBack = false,
   action,
-  onNotificationPress,
   onMenuPress,
 }: AppBarProps) {
   const theme = useTheme();
@@ -54,88 +53,58 @@ export function AppBar({
       >
         {/* Brand */}
         <View style={styles.brand}>
-          <Image
-            source={require("@/assets/images/icons/icon.png")}
-            style={styles.logo}
-            resizeMode="contain"
-          />
+          {showBack ? (
+            <Pressable
+              onPress={handleBack}
+              style={styles.backButton}
+              hitSlop={10}
+            >
+              <MaterialIcons name="arrow-back" size={24} color={theme.text} />
+            </Pressable>
+          ) : (
+            <Image
+              source={require("@/assets/images/icons/icon.png")}
+              style={styles.logo}
+              resizeMode="contain"
+            />
+          )}
 
           <View style={styles.titleContainer}>
-            <Text style={styles.brandTitle}>
+            <Text style={[styles.brandTitle, title ? { display: "none" } : {}]}>
               Ankit <Text style={styles.fas}>FAS</Text>
             </Text>
 
-            <Text style={styles.brandSubtitle}>
-              Fingerprint Attendance System
+            <Text
+              style={[
+                styles.brandSubtitle,
+                title
+                  ? { fontSize: 23, color: theme.text, fontWeight: "800" }
+                  : {},
+              ]}
+            >
+              {title ?? "Fingerprint Attendance System"}
             </Text>
+            {subtitle && (
+              <Text
+                style={[styles.pageSubtitle, { color: theme.textSecondary }]}
+                numberOfLines={1}
+              >
+                {subtitle}
+              </Text>
+            )}
           </View>
         </View>
 
         {/* Global actions */}
         <View style={styles.actions}>
-          <Pressable
-            style={styles.actionButton}
-            onPress={onNotificationPress}
-            hitSlop={8}
-          >
+          <Pressable style={styles.actionButton} onPress={() => {}} hitSlop={8}>
             <MaterialIcons
               name="notifications-none"
               size={25}
               color={theme.text}
             />
           </Pressable>
-
-          <Pressable
-            style={styles.actionButton}
-            onPress={onMenuPress}
-            hitSlop={8}
-          >
-            <MaterialIcons name="more-vert" size={25} color={theme.text} />
-          </Pressable>
         </View>
-      </View>
-
-      {/* ─────────────────────────────────────────
-          Page Header
-         ───────────────────────────────────────── */}
-      <View
-        style={[
-          styles.pageHeader,
-          {
-            backgroundColor: theme.background,
-            borderBottomColor: theme.border,
-          },
-        ]}
-      >
-        {showBack && (
-          <Pressable
-            onPress={handleBack}
-            style={styles.backButton}
-            hitSlop={10}
-          >
-            <MaterialIcons name="arrow-back" size={24} color={theme.text} />
-          </Pressable>
-        )}
-
-        <View style={styles.pageTitleContainer}>
-          <Text
-            style={[styles.pageTitle, { color: theme.text }]}
-            numberOfLines={1}
-          >
-            {title}
-          </Text>
-
-          {subtitle && (
-            <Text
-              style={[styles.pageSubtitle, { color: theme.textSecondary }]}
-              numberOfLines={1}
-            >
-              {subtitle}
-            </Text>
-          )}
-        </View>
-
-        {action && <View style={styles.pageAction}>{action}</View>}
       </View>
     </SafeAreaView>
   );
@@ -182,12 +151,11 @@ const styles = StyleSheet.create({
   },
 
   brandTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "900",
     color: "#172B4D",
     lineHeight: 23,
   },
-
   fas: {
     color: "#2878D7",
   },
@@ -227,8 +195,8 @@ const styles = StyleSheet.create({
   },
 
   backButton: {
-    width: 40,
-    height: 40,
+    width: 52,
+    height: 52,
 
     alignItems: "center",
     justifyContent: "center",
@@ -247,7 +215,7 @@ const styles = StyleSheet.create({
   },
 
   pageSubtitle: {
-    fontSize: 12,
+    fontSize: 13,
     marginTop: 1,
   },
 

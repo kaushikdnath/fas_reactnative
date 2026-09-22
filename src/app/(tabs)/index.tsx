@@ -2,8 +2,9 @@ import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import PageHeader from "@/components/PageHeader";
+import PageContainer from "@/components/PageContainer";
 import { ThemedText } from "@/components/themed-text";
+import { AppBar } from "@/components/ui/AppBar";
 import { Badge } from "@/components/ui/badge";
 import { ListRow } from "@/components/ui/list-row";
 import { StatCard } from "@/components/ui/stat-card";
@@ -42,16 +43,8 @@ export default function Dashboard() {
 
   return (
     <>
-      {/* <AppBar
-        title="Students"
-        showBack
-        action={
-          <Pressable>
-            <MaterialIcons name="add" size={28} color="#2878D7" />
-          </Pressable>
-        }
-      /> */}
-      <PageHeader title={institutionName || "Dashboard"} onRefresh={load}>
+      <AppBar />
+      <PageContainer onRefresh={load}>
         <View style={styles.grid}>
           <StatCard
             label="Students"
@@ -127,7 +120,7 @@ export default function Dashboard() {
             />
           ))
         )}
-      </PageHeader>
+      </PageContainer>
     </>
   );
 }
