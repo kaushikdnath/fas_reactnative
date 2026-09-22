@@ -41,83 +41,94 @@ export default function Dashboard() {
   );
 
   return (
-    <PageHeader title={institutionName || "Dashboard"} onRefresh={load}>
-      <View style={styles.grid}>
-        <StatCard
-          label="Students"
-          value={stats ? String(stats.students) : "\u2014"}
-          tone="primary"
-          onPress={() => router.push("/students")}
-        />
-        <StatCard
-          label="Batches"
-          value={stats ? String(stats.batches) : "\u2014"}
-          tone="secondary"
-          onPress={() => router.push("/batches")}
-        />
-        <StatCard
-          label="Present today"
-          value={stats ? String(stats.presentToday) : "\u2014"}
-          tone="success"
-          onPress={() => router.push("/attendance")}
-        />
-        <StatCard
-          label="Failed SMS"
-          value={stats ? String(stats.pendingSms) : "\u2014"}
-          tone={stats && stats.pendingSms > 0 ? "error" : "neutral"}
-          onPress={() => router.push("/sms-log")}
-        />
-      </View>
-
-      <ListRow
-        title="Fingerprint scanner"
-        subtitle={
-          scannerConnected === null
-            ? "Checking\u2026"
-            : scannerConnected
-              ? "Connected"
-              : "Not connected"
+    <>
+      {/* <AppBar
+        title="Students"
+        showBack
+        action={
+          <Pressable>
+            <MaterialIcons name="add" size={28} color="#2878D7" />
+          </Pressable>
         }
-        trailing={
-          <Badge
-            label={scannerConnected ? "Online" : "Offline"}
-            tone={scannerConnected ? "success" : "neutral"}
+      /> */}
+      <PageHeader title={institutionName || "Dashboard"} onRefresh={load}>
+        <View style={styles.grid}>
+          <StatCard
+            label="Students"
+            value={stats ? String(stats.students) : "\u2014"}
+            tone="primary"
+            onPress={() => router.push("/students")}
           />
-        }
-        onPress={() => router.push("/device")}
-      />
-      <ListRow
-        title="Manage all fingerprints"
-        subtitle="View or remove enrolled templates"
-        onPress={() => router.push("/fingerprints")}
-      />
+          <StatCard
+            label="Batches"
+            value={stats ? String(stats.batches) : "\u2014"}
+            tone="secondary"
+            onPress={() => router.push("/batches")}
+          />
+          <StatCard
+            label="Present today"
+            value={stats ? String(stats.presentToday) : "\u2014"}
+            tone="success"
+            onPress={() => router.push("/attendance")}
+          />
+          <StatCard
+            label="Failed SMS"
+            value={stats ? String(stats.pendingSms) : "\u2014"}
+            tone={stats && stats.pendingSms > 0 ? "error" : "neutral"}
+            onPress={() => router.push("/sms-log")}
+          />
+        </View>
 
-      <ThemedText
-        type="label"
-        themeColor="textSecondary"
-        style={styles.sectionLabel}
-      >
-        RECENT ACTIVITY
-      </ThemedText>
-      {recent.length === 0 ? (
+        <ListRow
+          title="Fingerprint scanner"
+          subtitle={
+            scannerConnected === null
+              ? "Checking\u2026"
+              : scannerConnected
+                ? "Connected"
+                : "Not connected"
+          }
+          trailing={
+            <Badge
+              label={scannerConnected ? "Online" : "Offline"}
+              tone={scannerConnected ? "success" : "neutral"}
+            />
+          }
+          onPress={() => router.push("/device")}
+        />
+        <ListRow
+          title="Manage all fingerprints"
+          subtitle="View or remove enrolled templates"
+          onPress={() => router.push("/fingerprints")}
+        />
+
         <ThemedText
-          type="body"
+          type="label"
           themeColor="textSecondary"
-          style={styles.emptyInline}
+          style={styles.sectionLabel}
         >
-          No attendance recorded yet today.
+          RECENT ACTIVITY
         </ThemedText>
-      ) : (
-        recent.map((r) => (
-          <ListRow
-            key={r.id}
-            title={r.studentName}
-            subtitle={`${r.batchName} \u00B7 ${r.outTime ? "Checked out" : "Checked in"}`}
-            onPress={() => router.push(`/students/${r.studentId}`)}
-          />
-        ))
-      )}
-    </PageHeader>
+        {recent.length === 0 ? (
+          <ThemedText
+            type="body"
+            themeColor="textSecondary"
+            style={styles.emptyInline}
+          >
+            No attendance recorded yet today.
+          </ThemedText>
+        ) : (
+          recent.map((r) => (
+            <ListRow
+              key={r.id}
+              title={r.studentName}
+              subtitle={`${r.batchName} \u00B7 ${r.outTime ? "Checked out" : "Checked in"}`}
+              onPress={() => router.push(`/students/${r.studentId}`)}
+            />
+          ))
+        )}
+      </PageHeader>
+    </>
   );
 }
 
