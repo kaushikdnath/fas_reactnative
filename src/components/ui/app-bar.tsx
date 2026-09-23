@@ -1,11 +1,11 @@
-import { router } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { router } from "expo-router";
+import { Pressable, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
-import { useTheme } from '@/hooks/use-theme';
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { Spacing } from "@/constants/theme";
+import { useTheme } from "@/hooks/use-theme";
 
 /** Custom top bar used by every screen (the project doesn't use Stack's
  *  native header -- `headerShown: false` is set globally, see _layout.tsx
@@ -29,7 +29,9 @@ export function AppBar({
       <View style={styles.row}>
         {onBack ? (
           <Pressable onPress={onBack} hitSlop={12} style={styles.backBtn}>
-            <ThemedText style={{ fontSize: 22, color: theme.text }}>{'\u2190'}</ThemedText>
+            <ThemedText style={{ fontSize: 22, color: theme.text }}>
+              {"\u2190"}
+            </ThemedText>
           </Pressable>
         ) : null}
         <View style={styles.titleWrap}>
@@ -37,7 +39,11 @@ export function AppBar({
             {title}
           </ThemedText>
           {subtitle ? (
-            <ThemedText type="small" themeColor="textSecondary" numberOfLines={1}>
+            <ThemedText
+              type="small"
+              themeColor="textSecondary"
+              numberOfLines={1}
+            >
               {subtitle}
             </ThemedText>
           ) : null}
@@ -53,7 +59,12 @@ export const goBack = () => router.back();
 
 const styles = StyleSheet.create({
   bar: { paddingHorizontal: Spacing.four, paddingBottom: Spacing.two },
-  row: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, minHeight: 40 },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.two,
+    minHeight: 40,
+  },
   backBtn: { padding: Spacing.one, marginLeft: -Spacing.one },
   titleWrap: { flex: 1 },
 });

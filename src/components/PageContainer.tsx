@@ -35,6 +35,7 @@ export default function PageContainer({
             <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
           ) : undefined
         }
+        keyboardShouldPersistTaps="handled"
       >
         {children}
       </ScrollView>

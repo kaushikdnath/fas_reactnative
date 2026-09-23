@@ -62,50 +62,46 @@ export function AppBar({
               <MaterialIcons name="arrow-back" size={24} color={theme.text} />
             </Pressable>
           ) : (
-            <Image
-              source={require("@/assets/images/icons/icon.png")}
-              style={styles.logo}
-              resizeMode="contain"
-            />
+            !title && (
+              <Image
+                source={require("@/assets/images/icons/icon.png")}
+                style={styles.logo}
+                resizeMode="contain"
+              />
+            )
           )}
 
           <View style={styles.titleContainer}>
-            <Text style={[styles.brandTitle, title ? { display: "none" } : {}]}>
-              Ankit <Text style={styles.fas}>FAS</Text>
-            </Text>
-
-            <Text
-              style={[
-                styles.brandSubtitle,
-                title
-                  ? { fontSize: 23, color: theme.text, fontWeight: "800" }
-                  : {},
-              ]}
-            >
-              {title ?? "Fingerprint Attendance System"}
-            </Text>
-            {subtitle && (
-              <Text
-                style={[styles.pageSubtitle, { color: theme.textSecondary }]}
-                numberOfLines={1}
-              >
-                {subtitle}
+            {title ? (
+              <Text style={styles.brandTitle}>{title}</Text>
+            ) : (
+              <Text style={styles.brandTitle}>
+                Ankit <Text style={styles.fas}>FAS</Text>
               </Text>
             )}
+
+            <Text style={styles.brandSubtitle}>
+              {subtitle ?? "Fingerprint Attendance System"}
+            </Text>
           </View>
         </View>
-
-        {/* Global actions */}
         <View style={styles.actions}>
-          <Pressable style={styles.actionButton} onPress={() => {}} hitSlop={8}>
-            <MaterialIcons
-              name="notifications-none"
-              size={25}
-              color={theme.text}
-            />
-          </Pressable>
+          {action ?? (
+            <Pressable
+              style={styles.actionButton}
+              onPress={() => {}}
+              hitSlop={8}
+            >
+              <MaterialIcons
+                name="notifications-none"
+                size={25}
+                color={theme.text}
+              />
+            </Pressable>
+          )}
         </View>
       </View>
+      <View style={styles.bottomShadow} />
     </SafeAreaView>
   );
 }
@@ -116,61 +112,59 @@ const styles = StyleSheet.create({
   safeArea: {
     width: "100%",
   },
-
-  /* ─────────────────────────────────────────
-     Application Header
-     ───────────────────────────────────────── */
-
   appHeader: {
     height: 64,
-
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-
     paddingHorizontal: 14,
-
-    borderBottomWidth: StyleSheet.hairlineWidth,
-
+    // borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: "#fefeff",
+    // elevation: 2,
+    position: "relative",
+  },
+  bottomShadow: {
+    height: 0.2,
+    backgroundColor: "#E5E7EB",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
     elevation: 2,
   },
-
   brand: {
     flexDirection: "row",
     alignItems: "center",
     flex: 1,
   },
-
   logo: {
     width: 52,
     height: 52,
   },
-
   titleContainer: {
     marginLeft: 8,
   },
-
   brandTitle: {
     fontSize: 24,
     fontWeight: "900",
     color: "#172B4D",
-    lineHeight: 23,
+    lineHeight: 27,
   },
   fas: {
     color: "#2878D7",
   },
-
   brandSubtitle: {
-    fontSize: 8.5,
+    fontSize: 10,
     color: "#64748B",
     marginTop: 1,
   },
-
   actions: {
     flexDirection: "row",
     alignItems: "center",
   },
-
   actionButton: {
     width: 42,
     height: 42,
@@ -178,11 +172,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
-  /* ─────────────────────────────────────────
-     Page Header
-     ───────────────────────────────────────── */
-
   pageHeader: {
     minHeight: 52,
 
@@ -193,32 +182,25 @@ const styles = StyleSheet.create({
 
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-
   backButton: {
     width: 52,
     height: 52,
-
     alignItems: "center",
     justifyContent: "center",
-
     marginLeft: -8,
     marginRight: 4,
   },
-
   pageTitleContainer: {
     flex: 1,
   },
-
   pageTitle: {
     fontSize: 23,
     fontWeight: "700",
   },
-
   pageSubtitle: {
-    fontSize: 13,
+    fontSize: 10,
     marginTop: 1,
   },
-
   pageAction: {
     marginLeft: 8,
   },

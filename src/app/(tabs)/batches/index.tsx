@@ -41,7 +41,7 @@ export default function BatchList() {
   return (
     <>
       <AppBar title="Batches" subtitle="Manage your batches" />
-      <PageContainer onRefresh={load} scrollable={false}>
+      <PageContainer scrollable={false}>
         {batches === null && !error ? (
           <LoadingView message="Loading batches\u2026" />
         ) : error ? (
