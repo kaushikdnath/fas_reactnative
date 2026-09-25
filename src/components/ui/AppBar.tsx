@@ -73,14 +73,16 @@ export function AppBar({
 
           <View style={styles.titleContainer}>
             {title ? (
-              <Text style={styles.brandTitle}>{title}</Text>
+              <Text style={[styles.brandTitle, { color: theme.text }]}>
+                {title}
+              </Text>
             ) : (
-              <Text style={styles.brandTitle}>
+              <Text style={[styles.brandTitle, { color: theme.text }]}>
                 Ankit <Text style={styles.fas}>FAS</Text>
               </Text>
             )}
 
-            <Text style={styles.brandSubtitle}>
+            <Text style={[styles.brandSubtitle, { color: theme.text }]}>
               {subtitle ?? "Fingerprint Attendance System"}
             </Text>
           </View>
@@ -106,7 +108,8 @@ export function AppBar({
   );
 }
 
-export const goBack = () => router.back();
+export const goBack = () =>
+  router.canGoBack() ? router.back() : router.replace("/");
 
 const styles = StyleSheet.create({
   safeArea: {

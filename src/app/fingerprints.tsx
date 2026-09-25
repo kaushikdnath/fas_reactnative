@@ -1,19 +1,26 @@
-import { useCallback, useState } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
-import { router, useFocusEffect } from 'expo-router';
+import { router, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
+import { FlatList, StyleSheet } from "react-native";
 
-import { deleteFingerprint, listAllFingerprints } from '@/data/fingerprint-repository';
-import { logAudit } from '@/data/audit-repository';
-import { FingerprintScanner } from '@/services/fingerprint-scanner';
-import { AppBar, goBack } from '@/components/ui/app-bar';
-import { Button } from '@/components/ui/button';
-import { ConfirmDialog } from '@/components/ui/confirm-dialog';
-import { EmptyStateView, ErrorView, LoadingView } from '@/components/ui/state-views';
-import { ListRow } from '@/components/ui/list-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { Spacing } from '@/constants/theme';
-import type { Fingerprint } from '@/types/models';
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { AppBar } from "@/components/ui/AppBar";
+import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { ListRow } from "@/components/ui/list-row";
+import {
+  EmptyStateView,
+  ErrorView,
+  LoadingView,
+} from "@/components/ui/state-views";
+import { Spacing } from "@/constants/theme";
+import { logAudit } from "@/data/audit-repository";
+import {
+  deleteFingerprint,
+  listAllFingerprints,
+} from "@/data/fingerprint-repository";
+import { FingerprintScanner } from "@/services/fingerprint-scanner";
+import type { Fingerprint } from "@/types/models";
 
 export default function FingerprintsOverview() {
   const [fingerprints, setFingerprints] = useState<Fingerprint[] | null>(null);
@@ -23,21 +30,32 @@ export default function FingerprintsOverview() {
 
   const load = useCallback(async () => {
     const result = await listAllFingerprints();
-    if (result.ok) { setFingerprints(result.value); setError(null); } else { setError(result.failure.message); }
+    if (result.ok) {
+      setFingerprints(result.value);
+      setError(null);
+    } else {
+      setError(result.failure.message);
+    }
   }, []);
 
-  useFocusEffect(useCallback(() => { load(); }, [load]));
+  useFocusEffect(
+    useCallback(() => {
+      load();
+    }, [load]),
+  );
 
   const handleDelete = async () => {
     if (!pendingDelete) return;
     setBusy(true);
     try {
-      if (await FingerprintScanner.isConnected()) await FingerprintScanner.deleteModel(pendingDelete.deviceSlot);
+      if (await FingerprintScanner.isConnected())
+        await FingerprintScanner.deleteModel(pendingDelete.deviceSlot);
     } catch {
       // Sensor may be offline; the phone-side record is still removed.
     }
     const result = await deleteFingerprint(pendingDelete.id);
-    if (result.ok) await logAudit('fingerprint.delete', { fingerprintId: pendingDelete.id });
+    if (result.ok)
+      await logAudit("fingerprint.delete", { fingerprintId: pendingDelete.id });
     setBusy(false);
     setPendingDelete(null);
     load();
@@ -45,14 +63,22 @@ export default function FingerprintsOverview() {
 
   return (
     <ThemedView style={styles.page}>
-      <AppBar title="Fingerprints" subtitle={fingerprints ? `${fingerprints.length} enrolled` : undefined} onBack={goBack} />
+      <AppBar
+        title="Fingerprints"
+        subtitle={fingerprints ? `${fingerprints.length} enrolled` : undefined}
+        showBack
+      />
 
       {fingerprints === null && !error ? (
         <LoadingView message="Loading fingerprints\u2026" />
       ) : error ? (
         <ErrorView message={error} onRetry={load} />
       ) : fingerprints!.length === 0 ? (
-        <EmptyStateView icon="\uD83D\uDD90\uFE0F" title="No fingerprints enrolled" subtitle="Enroll fingerprints from a student's detail screen." />
+        <EmptyStateView
+          icon="\uD83D\uDD90\uFE0F"
+          title="No fingerprints enrolled"
+          subtitle="Enroll fingerprints from a student's detail screen."
+        />
       ) : (
         <FlatList
           data={fingerprints!}
@@ -63,7 +89,13 @@ export default function FingerprintsOverview() {
               title={`${item.studentName} \u2014 ${item.fingerName}`}
               subtitle={`${item.studentCode} \u00B7 Sensor slot ${item.deviceSlot}`}
               onPress={() => router.push(`/students/${item.studentId}`)}
-              trailing={<Button label="Remove" variant="text" onPress={() => setPendingDelete(item)} />}
+              trailing={
+                <Button
+                  label="Remove"
+                  variant="text"
+                  onPress={() => setPendingDelete(item)}
+                />
+              }
             />
           )}
         />
@@ -76,9 +108,12 @@ export default function FingerprintsOverview() {
         confirmVariant="danger"
         busy={busy}
         onCancel={() => setPendingDelete(null)}
-        onConfirm={handleDelete}>
+        onConfirm={handleDelete}
+      >
         <ThemedText type="body">
-          {pendingDelete ? `${pendingDelete.fingerName} for ${pendingDelete.studentName} will be removed from both the sensor and this phone.` : ''}
+          {pendingDelete
+            ? `${pendingDelete.fingerName} for ${pendingDelete.studentName} will be removed from both the sensor and this phone.`
+            : ""}
         </ThemedText>
       </ConfirmDialog>
     </ThemedView>
