@@ -117,7 +117,7 @@ export default function StudentList() {
   return (
     <>
       <AppBar title="Students" subtitle="Manage your students" />
-      <PageContainer onRefresh={onRefresh}>
+      <PageContainer onRefresh={onRefresh} scrollable={false}>
         <SearchBar
           value={query}
           onChangeText={setQuery}

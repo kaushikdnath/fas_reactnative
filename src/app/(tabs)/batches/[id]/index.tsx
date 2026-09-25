@@ -109,7 +109,7 @@ export default function BatchDetail() {
           </View>
         }
       />
-      <PageContainer>
+      <PageContainer scrollable={false}>
         <View style={styles.summaryRow}>
           <Badge
             label={batch.active ? "Active" : "Inactive"}
