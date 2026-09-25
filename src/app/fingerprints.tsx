@@ -2,6 +2,7 @@ import { router, useFocusEffect } from "expo-router";
 import { useCallback, useState } from "react";
 import { FlatList, StyleSheet } from "react-native";
 
+import PageContainer from "@/components/PageContainer";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { AppBar } from "@/components/ui/AppBar";
@@ -62,60 +63,61 @@ export default function FingerprintsOverview() {
   };
 
   return (
-    <ThemedView style={styles.page}>
+    <ThemedView>
       <AppBar
         title="Fingerprints"
         subtitle={fingerprints ? `${fingerprints.length} enrolled` : undefined}
         showBack
       />
+      <PageContainer>
+        {fingerprints === null && !error ? (
+          <LoadingView message="Loading fingerprints\u2026" />
+        ) : error ? (
+          <ErrorView message={error} onRetry={load} />
+        ) : fingerprints!.length === 0 ? (
+          <EmptyStateView
+            icon="\uD83D\uDD90\uFE0F"
+            title="No fingerprints enrolled"
+            subtitle="Enroll fingerprints from a student's detail screen."
+          />
+        ) : (
+          <FlatList
+            data={fingerprints!}
+            keyExtractor={(f) => String(f.id)}
+            contentContainerStyle={styles.list}
+            renderItem={({ item }) => (
+              <ListRow
+                title={`${item.studentName} \u2014 ${item.fingerName}`}
+                subtitle={`${item.studentCode} \u00B7 Sensor slot ${item.deviceSlot}`}
+                onPress={() => router.push(`/students/${item.studentId}`)}
+                trailing={
+                  <Button
+                    label="Remove"
+                    variant="text"
+                    onPress={() => setPendingDelete(item)}
+                  />
+                }
+              />
+            )}
+          />
+        )}
 
-      {fingerprints === null && !error ? (
-        <LoadingView message="Loading fingerprints\u2026" />
-      ) : error ? (
-        <ErrorView message={error} onRetry={load} />
-      ) : fingerprints!.length === 0 ? (
-        <EmptyStateView
-          icon="\uD83D\uDD90\uFE0F"
-          title="No fingerprints enrolled"
-          subtitle="Enroll fingerprints from a student's detail screen."
-        />
-      ) : (
-        <FlatList
-          data={fingerprints!}
-          keyExtractor={(f) => String(f.id)}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
-            <ListRow
-              title={`${item.studentName} \u2014 ${item.fingerName}`}
-              subtitle={`${item.studentCode} \u00B7 Sensor slot ${item.deviceSlot}`}
-              onPress={() => router.push(`/students/${item.studentId}`)}
-              trailing={
-                <Button
-                  label="Remove"
-                  variant="text"
-                  onPress={() => setPendingDelete(item)}
-                />
-              }
-            />
-          )}
-        />
-      )}
-
-      <ConfirmDialog
-        visible={!!pendingDelete}
-        title="Remove this fingerprint?"
-        confirmLabel="Remove"
-        confirmVariant="danger"
-        busy={busy}
-        onCancel={() => setPendingDelete(null)}
-        onConfirm={handleDelete}
-      >
-        <ThemedText type="body">
-          {pendingDelete
-            ? `${pendingDelete.fingerName} for ${pendingDelete.studentName} will be removed from both the sensor and this phone.`
-            : ""}
-        </ThemedText>
-      </ConfirmDialog>
+        <ConfirmDialog
+          visible={!!pendingDelete}
+          title="Remove this fingerprint?"
+          confirmLabel="Remove"
+          confirmVariant="danger"
+          busy={busy}
+          onCancel={() => setPendingDelete(null)}
+          onConfirm={handleDelete}
+        >
+          <ThemedText type="body">
+            {pendingDelete
+              ? `${pendingDelete.fingerName} for ${pendingDelete.studentName} will be removed from both the sensor and this phone.`
+              : ""}
+          </ThemedText>
+        </ConfirmDialog>
+      </PageContainer>
     </ThemedView>
   );
 }

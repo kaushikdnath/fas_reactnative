@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
+import PageContainer from "@/components/PageContainer";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { AppBar } from "@/components/ui/AppBar";
@@ -100,13 +101,9 @@ export default function Device() {
   };
 
   return (
-    <ThemedView style={styles.page}>
-      <AppBar
-        title="Fingerprint scanner"
-        subtitle="AS608 via CH340 USB-UART"
-        showBack
-      />
-
+    <ThemedView>
+      <AppBar title="Fingerprint scanner" showBack />
+      <PageContainer></PageContainer>
       <View style={styles.statusRow}>
         <Badge
           label={connected ? "Connected" : "Not connected"}

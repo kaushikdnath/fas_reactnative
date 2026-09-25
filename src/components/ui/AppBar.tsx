@@ -83,7 +83,7 @@ export function AppBar({
             )}
 
             <Text style={[styles.brandSubtitle, { color: theme.text }]}>
-              {subtitle ?? "Fingerprint Attendance System"}
+              {subtitle ?? (!title && "Fingerprint Attendance System")}
             </Text>
           </View>
         </View>

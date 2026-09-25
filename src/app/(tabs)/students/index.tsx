@@ -126,7 +126,7 @@ export default function StudentList() {
         <View
           style={{
             flexDirection: "row",
-            marginBottom: 20,
+            marginBottom: 10,
             paddingHorizontal: Spacing.three,
           }}
         >
@@ -135,7 +135,7 @@ export default function StudentList() {
             label={batchOptions[0].label}
             selected={"all" === batchFilter}
             onPress={() => setBatchFilter(batchOptions[0].value)}
-            styleCss={{ flex: 1, maxWidth: 70 }}
+            styleCss={{ flex: 1, maxWidth: 60 }}
           />
           <ChipRow
             options={batchOptions.filter((b) => b.value !== "all")}
@@ -146,21 +146,15 @@ export default function StudentList() {
         <View
           style={{
             flexDirection: "row",
-            marginBottom: 20,
+            marginBottom: 10,
             paddingHorizontal: Spacing.three,
           }}
         >
-          <Chip
-            key={String(statusOptions[0].value)}
-            label={statusOptions[0].label}
-            selected={"all" === statusFilter}
-            onPress={() => setStatusFilter(statusOptions[0].value)}
-            styleCss={{ flex: 1, maxWidth: 70 }}
-          />
           <ChipRow
-            options={statusOptions.filter((b) => b.value !== "all")}
+            options={statusOptions}
             selected={statusFilter}
             onSelect={setStatusFilter}
+            styleCss={{ flexDirection: "row" }}
           />
         </View>
 

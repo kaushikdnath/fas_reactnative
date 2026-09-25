@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
     gap: Spacing.two,
     marginVertical: Spacing.three,
   },
-  actionBtn: { flex: 1 },
+  actionBtn: {},
   sectionLabel: { marginTop: Spacing.three, marginBottom: Spacing.two },
   emptyInline: { marginBottom: Spacing.two },
   deleteBtn: { marginTop: Spacing.five },
