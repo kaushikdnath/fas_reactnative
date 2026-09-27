@@ -155,7 +155,7 @@ export default function Attendance() {
   return (
     <>
       <AppBar title="Attendance" subtitle="Record student attendance" />
-      <PageContainer>
+      <PageContainer scrollable={false}>
         <View
           style={{
             flexDirection: "row",

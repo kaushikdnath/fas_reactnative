@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Attendance AS608",
-    "slug": "attendance-as608",
+    "name": "Ankit FAS",
+    "slug": "ankit-fas",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icons/icon.png",
@@ -16,7 +16,7 @@
         {
           "image": "./assets/images/icons/splash-icon.png",
           "resizeMode": "contain",
-          "backgroundColor": "#fff",
+          "backgroundColor": "#FFFFFF",
           "imageWidth": 220
         }
       ]
@@ -25,10 +25,26 @@
       "package": "com.kaushikdnath.fas",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icons/adaptive-foreground.png",
-        "backgroundColor": "#fff",
+        "backgroundColor": "#FFFFFF",
         "imageWidth": 100
       }
     },
-    "experiments": { "typedRoutes": true }
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "193bb9e1-324d-4391-b4c1-3aa353d6a24d"
+      }
+    },
+    "owner": "kdebnath",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/193bb9e1-324d-4391-b4c1-3aa353d6a24d"
+    },
+    "ios": {}
   }
 }

@@ -25,7 +25,6 @@ function RootStack() {
       <StatusBar style={resolvedScheme === "dark" ? "light" : "dark"} />
       <LoadingProvider>
         <DatabaseProvider>
-          {/* <AppHeader /> */}
           <Stack
             screenOptions={{
               headerShown: false,

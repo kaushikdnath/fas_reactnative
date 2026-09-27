@@ -239,10 +239,10 @@ export function LoadingOverlay({
   onCancel?: () => void;
 }) {
   const theme = useTheme();
-  const [screenDim, setScreenDim] = useState(() => Dimensions.get('screen'));
+  const [screenDim, setScreenDim] = useState(() => Dimensions.get("screen"));
 
   useEffect(() => {
-    const sub = Dimensions.addEventListener('change', ({ screen }) => {
+    const sub = Dimensions.addEventListener("change", ({ screen }) => {
       setScreenDim(screen);
     });
     return () => sub.remove();
@@ -294,10 +294,7 @@ export function LoadingOverlay({
               },
             ]}
           >
-            <LoadingSpinner
-              size={50}
-              color={theme.primary}
-            />
+            <LoadingSpinner size={50} color={theme.primary} />
             {message ? (
               <ThemedText
                 type="body"
