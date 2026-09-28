@@ -11,7 +11,6 @@ import {
 } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ChipRow } from "@/components/ui/chip";
@@ -20,6 +19,7 @@ import { Radius, Spacing } from "@/constants/theme";
 import { Logger } from "@/core/logger";
 import { Validators } from "@/core/validators";
 import type { Batch, Student, StudentDraft } from "@/types/models";
+import PageContainer from "../PageContainer";
 import { AppBar } from "../ui/AppBar";
 
 const RELATIONSHIPS = ["Father", "Mother", "Guardian", "Sibling", "Other"];
@@ -166,140 +166,147 @@ export function StudentForm({
   };
 
   return (
-    <ThemedView>
+    <>
       <AppBar title={title} showBack />
-      <ScrollView contentContainerStyle={styles.content}>
-        <View style={styles.photoSection}>
-          <Pressable
-            onPress={() => pickPhoto("camera")}
-            onLongPress={() => pickPhoto("gallery")}
-          >
-            {photoUri ? (
-              <Image source={{ uri: photoUri }} style={styles.photo} />
-            ) : (
-              <Avatar name={name || "?"} size={96} />
-            )}
-          </Pressable>
-          <View style={styles.photoActions}>
-            <Button
-              label="Camera"
-              variant="outlined"
+      <PageContainer scrollable={false}>
+        <ScrollView contentContainerStyle={styles.content}>
+          <View style={styles.photoSection}>
+            <Pressable
               onPress={() => pickPhoto("camera")}
-            />
-            <Button
-              label="Gallery"
-              variant="outlined"
-              onPress={() => pickPhoto("gallery")}
-            />
+              onLongPress={() => pickPhoto("gallery")}
+            >
+              {photoUri ? (
+                <Image source={{ uri: photoUri }} style={styles.photo} />
+              ) : (
+                <Avatar name={name || "?"} size={96} />
+              )}
+            </Pressable>
+            <View style={styles.photoActions}>
+              <Button
+                label="Camera"
+                variant="outlined"
+                onPress={() => pickPhoto("camera")}
+              />
+              <Button
+                label="Gallery"
+                variant="outlined"
+                onPress={() => pickPhoto("gallery")}
+              />
+            </View>
+            {permissionNote ? (
+              <ThemedText
+                type="small"
+                themeColor="error"
+                style={styles.permissionNote}
+              >
+                {permissionNote}
+              </ThemedText>
+            ) : null}
           </View>
-          {permissionNote ? (
+
+          <TextField
+            label="Student code"
+            value={code}
+            onChangeText={setCode}
+            placeholder="e.g. STU-0001"
+            autoCapitalize="characters"
+            error={errors.code}
+          />
+          <TextField
+            label="Full name"
+            value={name}
+            onChangeText={setName}
+            error={errors.name}
+          />
+
+          <ThemedText
+            type="label"
+            themeColor="textSecondary"
+            style={styles.groupLabel}
+          >
+            BATCH
+          </ThemedText>
+          <ChipRow
+            options={batches.map((b) => ({ value: b.id, label: b.name }))}
+            selected={batchId ?? -1}
+            onSelect={setBatchId}
+          />
+          {errors.batch ? (
             <ThemedText
               type="small"
               themeColor="error"
-              style={styles.permissionNote}
+              style={styles.batchError}
             >
-              {permissionNote}
+              {errors.batch}
             </ThemedText>
           ) : null}
-        </View>
 
-        <TextField
-          label="Student code"
-          value={code}
-          onChangeText={setCode}
-          placeholder="e.g. STU-0001"
-          autoCapitalize="characters"
-          error={errors.code}
-        />
-        <TextField
-          label="Full name"
-          value={name}
-          onChangeText={setName}
-          error={errors.name}
-        />
+          <TextField
+            label="Address (optional)"
+            value={address}
+            onChangeText={setAddress}
+            multiline
+          />
+          <TextField
+            label="Guardian name"
+            value={guardianName}
+            onChangeText={setGuardianName}
+            error={errors.guardianName}
+          />
 
-        <ThemedText
-          type="label"
-          themeColor="textSecondary"
-          style={styles.groupLabel}
-        >
-          BATCH
-        </ThemedText>
-        <ChipRow
-          options={batches.map((b) => ({ value: b.id, label: b.name }))}
-          selected={batchId ?? -1}
-          onSelect={setBatchId}
-        />
-        {errors.batch ? (
-          <ThemedText type="small" themeColor="error" style={styles.batchError}>
-            {errors.batch}
-          </ThemedText>
-        ) : null}
-
-        <TextField
-          label="Address (optional)"
-          value={address}
-          onChangeText={setAddress}
-          multiline
-        />
-        <TextField
-          label="Guardian name"
-          value={guardianName}
-          onChangeText={setGuardianName}
-          error={errors.guardianName}
-        />
-
-        <ThemedText
-          type="label"
-          themeColor="textSecondary"
-          style={styles.groupLabel}
-        >
-          RELATIONSHIP
-        </ThemedText>
-        <ChipRow
-          options={RELATIONSHIPS.map((r) => ({ value: r, label: r }))}
-          selected={guardianRelationship}
-          onSelect={setGuardianRelationship}
-        />
-
-        <TextField
-          label="Guardian mobile"
-          value={guardianMobile}
-          onChangeText={setGuardianMobile}
-          keyboardType="phone-pad"
-          error={errors.guardianMobile}
-        />
-        <TextField
-          label="Student mobile (optional)"
-          value={studentMobile}
-          onChangeText={setStudentMobile}
-          keyboardType="phone-pad"
-          error={errors.studentMobile}
-        />
-
-        <View style={styles.switchRow}>
-          <ThemedText type="bodyBold">Active</ThemedText>
-          <Switch value={active} onValueChange={setActive} />
-        </View>
-
-        {submitError ? (
           <ThemedText
-            type="small"
-            themeColor="error"
-            style={styles.submitError}
+            type="label"
+            themeColor="textSecondary"
+            style={styles.groupLabel}
           >
-            {submitError}
+            RELATIONSHIP
           </ThemedText>
-        ) : null}
+          <ChipRow
+            options={RELATIONSHIPS.map((r) => ({ value: r, label: r }))}
+            selected={guardianRelationship}
+            onSelect={setGuardianRelationship}
+            styleCss={{ marginBottom: 20 }}
+          />
 
-        <Button
-          label={initial ? "Save changes" : "Add student"}
-          onPress={handleSubmit}
-          loading={submitting}
-          style={styles.submitBtn}
-        />
-      </ScrollView>
-    </ThemedView>
+          <TextField
+            label="Guardian mobile"
+            value={guardianMobile}
+            onChangeText={setGuardianMobile}
+            keyboardType="phone-pad"
+            error={errors.guardianMobile}
+          />
+          <TextField
+            label="Student mobile (optional)"
+            value={studentMobile}
+            onChangeText={setStudentMobile}
+            keyboardType="phone-pad"
+            error={errors.studentMobile}
+          />
+
+          <View style={styles.switchRow}>
+            <ThemedText type="bodyBold">Active</ThemedText>
+            <Switch value={active} onValueChange={setActive} />
+          </View>
+
+          {submitError ? (
+            <ThemedText
+              type="small"
+              themeColor="error"
+              style={styles.submitError}
+            >
+              {submitError}
+            </ThemedText>
+          ) : null}
+
+          <Button
+            label={initial ? "Save changes" : "Add student"}
+            onPress={handleSubmit}
+            loading={submitting}
+            style={styles.submitBtn}
+          />
+        </ScrollView>
+      </PageContainer>
+    </>
   );
 }
 

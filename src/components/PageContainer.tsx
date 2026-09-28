@@ -43,7 +43,7 @@ export default function PageContainer({
   );
 }
 const styles = StyleSheet.create({
-  page: { flex: 1, paddingTop: 25 },
+  page: { flex: 1, paddingTop: 25, paddingBottom: 50 },
   scroll: { paddingBottom: 96 },
   header: {
     paddingHorizontal: Spacing.four,
