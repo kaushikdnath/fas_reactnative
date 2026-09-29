@@ -311,10 +311,6 @@ export function LoadingOverlay({
   );
 }
 
-/**
- * LoadingProvider gives any child component access to `useLoading()`.
- * Automatically mounts a full-screen animated LoadingOverlay when active.
- */
 export function LoadingProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -414,22 +410,6 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/**
- * Hook to consume the LoadingContext.
- *
- * Example:
- * ```tsx
- * const { showLoading, hideLoading, withLoading } = useLoading();
- *
- * // Option 1: Manual show/hide
- * showLoading("Saving student...");
- * await saveStudent(data);
- * hideLoading();
- *
- * // Option 2: Automatic wrapper
- * await withLoading(() => saveStudent(data), "Saving student...");
- * ```
- */
 export function useLoading(): LoadingContextType {
   const context = useContext(LoadingContext);
 
