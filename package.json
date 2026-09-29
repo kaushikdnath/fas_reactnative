@@ -48,7 +48,8 @@
     "build": "expo prebuild -p android && expo run:android",
     "start": "expo start --dev-client",
     "adbfix": "adb reverse tcp:8081 tcp:8081",
-    "eas:preview": "set EAS_SKIP_AUTO_FINGERPRINT=1 && eas update --channel preview --platform android --message \"Update Code\" --environment preview"
+    "eas:preview": "set EAS_SKIP_AUTO_FINGERPRINT=1 && eas update --channel preview --platform android --message \"Update Code\" --environment preview",
+    "eas:dev": "expo start"
   },
   "private": true
 }
