@@ -11,66 +11,63 @@ export default function LoadingBar({ visible }: LoadingBarProps) {
   useEffect(() => {
     if (!visible) {
       progress.stopAnimation();
-
-      Animated.timing(progress, {
-        toValue: 1,
-        duration: 200,
-        useNativeDriver: false,
-      }).start();
-
       return;
     }
 
     progress.setValue(0);
 
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(progress, {
-          toValue: 0.7,
-          duration: 900,
-          easing: Easing.out(Easing.ease),
-          useNativeDriver: false,
-        }),
-        Animated.timing(progress, {
-          toValue: 0.25,
-          duration: 600,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: false,
-        }),
-      ]),
-    ).start();
-  }, [visible, progress]);
+    const animation = Animated.loop(
+      Animated.timing(progress, {
+        toValue: 1,
+        duration: 4000,
+        easing: Easing.linear,
+        useNativeDriver: false,
+      }),
+    );
 
-  if (!visible) {
-    return null;
-  }
+    animation.start();
+
+    return () => {
+      animation.stop();
+      progress.stopAnimation();
+    };
+  }, [visible, progress]);
 
   return (
     <View style={styles.container}>
-      <Animated.View
-        style={[
-          styles.bar,
-          {
-            width: progress.interpolate({
-              inputRange: [0, 1],
-              outputRange: ["0%", "100%"],
-            }),
-          },
-        ]}
-      />
+      {visible && (
+        <Animated.View
+          style={[
+            styles.bar,
+            {
+              transform: [
+                {
+                  translateX: progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ["-100%", "300%"],
+                  }),
+                },
+              ],
+            },
+          ]}
+        />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 3,
+    height: 1,
     width: "100%",
     overflow: "hidden",
   },
 
   bar: {
+    position: "absolute",
+    left: 0,
     height: "100%",
+    width: "45%",
     backgroundColor: "#2196F3",
   },
 });

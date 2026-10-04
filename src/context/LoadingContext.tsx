@@ -30,6 +30,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { ThemedText } from "@/components/themed-text";
+import LoadingBar from "@/components/ui/loading";
 import { Radius, Spacing } from "@/constants/theme";
 import { useTheme } from "@/hooks/use-theme";
 
@@ -108,10 +109,6 @@ export const globalLoading = {
 
 const LoadingContext = createContext<LoadingContextType | undefined>(undefined);
 
-/**
- * Animated circular spinner built with react-native-reanimated.
- * Can be used standalone or inside the global LoadingOverlay.
- */
 export function LoadingSpinner({
   size = 48,
   color,
@@ -400,12 +397,13 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
-      <LoadingOverlay
+      <LoadingBar visible={isLoading} />
+      {/* <LoadingOverlay
         visible={isLoading}
         message={message}
         cancelable={options?.cancelable}
         onCancel={handleCancel}
-      />
+      /> */}
     </LoadingContext.Provider>
   );
 }

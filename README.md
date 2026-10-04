@@ -27,11 +27,6 @@ https://unicode.org/emoji/charts/full-emoji-list.html
 
 eas init --id 193bb9e1-324d-4391-b4c1-3aa353d6a24d
 
-# EAS update
-
-eas update:configure
-eas update --branch development --message "Initial development update" --platform=android
-
 # EAS build for the development
 
 eas build --platform android --profile development
@@ -39,3 +34,8 @@ eas build --platform android --profile development
 # EAS build for the preview
 
 eas build --platform android --profile preview
+
+# EAS update
+
+eas update:configure
+eas update --branch development --message "Initial development update" --platform=android
