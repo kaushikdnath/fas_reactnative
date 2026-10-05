@@ -1,5 +1,5 @@
 {
-  "name": "fas",
+  "name": "ankit-fas",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "dependencies": {
@@ -48,8 +48,11 @@
     "build": "expo prebuild -p android && expo run:android",
     "start": "expo start --dev-client",
     "adbfix": "adb reverse tcp:8081 tcp:8081",
-    "eas:preview": "set EAS_SKIP_AUTO_FINGERPRINT=1 && eas update --channel preview --platform android --message \"Update Code\" --environment preview",
-    "eas:dev": "expo start"
+    "eas:update-preview": "set EAS_SKIP_AUTO_FINGERPRINT=1 && eas update --channel preview --platform android --message \"Update Code\" --environment preview",
+    "eas:update-production": "set EAS_SKIP_AUTO_FINGERPRINT=1 && eas update --channel production --platform android --message \"Update Code\" --environment production",
+    "eas:build-development": "eas build --profile development --platform android",
+    "eas:build-preview": "eas build --profile preview --platform android",
+    "eas:build-production": "eas build --profile production --platform android"
   },
   "private": true
 }

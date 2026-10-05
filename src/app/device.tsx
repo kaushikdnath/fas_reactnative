@@ -101,7 +101,7 @@ export default function Device() {
 
   return (
     <ThemedView>
-      <AppBar title="Fingerprint scanner" showBack />
+      <AppBar title="Fingerprint Scanner" showBack />
       <View style={[styles.statusRow, { paddingTop: 25 }]}>
         <Badge
           label={connected ? "Connected" : "Not connected"}

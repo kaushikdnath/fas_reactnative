@@ -1,27 +1,22 @@
 import { router } from "expo-router";
 import { useEffect, useState } from "react";
-import { StyleSheet, Switch, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import PageContainer from "@/components/PageContainer";
 import { ThemedText } from "@/components/themed-text";
 import { AppBar } from "@/components/ui/AppBar";
 import { Button } from "@/components/ui/button";
-import { ChipRow } from "@/components/ui/chip";
+import { Chip } from "@/components/ui/chip";
 import { ListRow } from "@/components/ui/list-row";
 import { TextField } from "@/components/ui/text-field";
 import { Spacing } from "@/constants/theme";
 import { useThemeMode } from "@/hooks/theme-mode-context";
-import type { PalettePref, ThemeModePref } from "@/services/settings";
 import {
-  getAutoSmsOnAttendance,
   getInstitutionName,
   getSmsConfig,
-  saveAutoSmsOnAttendance,
   saveInstitutionName,
-  saveSmsConfig,
 } from "@/services/settings";
-import { sendSms } from "@/services/sms";
 
 export default function Settings() {
   const insets = useSafeAreaInsets();
@@ -30,10 +25,7 @@ export default function Settings() {
   const [institutionName, setInstitutionName] = useState("");
   const [baseUrl, setBaseUrl] = useState("");
   const [token, setToken] = useState("");
-  const [autoSms, setAutoSms] = useState(false);
-  const [testNumber, setTestNumber] = useState("");
-  const [testStatus, setTestStatus] = useState<string | null>(null);
-  const [testing, setTesting] = useState(false);
+  const [sim, setSim] = useState("sim1");
 
   useEffect(() => {
     getInstitutionName().then(setInstitutionName);
@@ -41,26 +33,7 @@ export default function Settings() {
       setBaseUrl(c.baseUrl);
       setToken(c.token);
     });
-    getAutoSmsOnAttendance().then(setAutoSms);
   }, []);
-
-  const handleTestSms = async () => {
-    setTesting(true);
-    setTestStatus(null);
-    try {
-      await sendSms(
-        { baseUrl, token },
-        [testNumber],
-        "Test message from Attendance Manager.",
-      );
-      setTestStatus("Sent successfully.");
-    } catch (e) {
-      setTestStatus(
-        e instanceof Error ? e.message : "Failed to send test SMS.",
-      );
-    }
-    setTesting(false);
-  };
 
   return (
     <>
@@ -73,39 +46,33 @@ export default function Settings() {
         >
           APPEARANCE
         </ThemedText>
-        <ChipRow
-          options={[
-            { value: "system" as ThemeModePref, label: "System" },
-            { value: "light" as ThemeModePref, label: "Light" },
-            { value: "dark" as ThemeModePref, label: "Dark" },
-          ]}
-          selected={mode}
-          onSelect={setMode}
-        />
-
-        <ThemedText
-          type="label"
-          themeColor="textSecondary"
-          style={styles.sectionLabel}
+        <View
+          style={{
+            flexDirection: "row",
+            marginBottom: 10,
+            paddingHorizontal: Spacing.three,
+          }}
         >
-          COLOR PALETTE
-        </ThemedText>
-        <ChipRow
-          options={[
-            { value: "blue-teal" as PalettePref, label: "Blue + Teal" },
-            { value: "deep-blue" as PalettePref, label: "Deep Blue + White" },
-          ]}
-          selected={palette}
-          onSelect={setPalette}
-        />
+          <Chip
+            key="system"
+            label="System"
+            selected={"system" == mode}
+            onPress={() => setMode("system")}
+          />
+          <Chip
+            key="light"
+            label="Light"
+            selected={"light" == mode}
+            onPress={() => setMode("light")}
+          />
+          <Chip
+            key="dark"
+            label="Dark"
+            selected={"dark" == mode}
+            onPress={() => setMode("dark")}
+          />
+        </View>
 
-        <ThemedText
-          type="label"
-          themeColor="textSecondary"
-          style={styles.sectionLabel}
-        >
-          INSTITUTION
-        </ThemedText>
         <View style={styles.card}>
           <TextField
             label="Institution name"
@@ -120,75 +87,22 @@ export default function Settings() {
           />
         </View>
 
-        <ThemedText
-          type="label"
-          themeColor="textSecondary"
-          style={styles.sectionLabel}
-        >
-          SMS GATEWAY
+        <ThemedText type="label" themeColor="textSecondary" style={styles.card}>
+          SIM FOR SENDING SMS
         </ThemedText>
         <View style={styles.card}>
-          <TextField
-            label="Gateway base URL"
-            value={baseUrl}
-            onChangeText={setBaseUrl}
-            placeholder="http://192.168.1.10:8080"
-            autoCapitalize="none"
+          <Chip
+            key="sim1"
+            label="Sim 1"
+            selected={"sim1" == sim}
+            onPress={() => setSim("sim1")}
           />
-          <TextField
-            label="Access token"
-            value={token}
-            onChangeText={setToken}
-            placeholder="Bearer token"
-            autoCapitalize="none"
-          />
-          <Button
-            label="Save gateway settings"
-            variant="tonal"
-            onPress={() => saveSmsConfig(baseUrl.trim(), token.trim())}
-          />
-
-          <View style={styles.switchRow}>
-            <ThemedText type="bodyBold" style={styles.switchLabel}>
-              Send SMS automatically on attendance
-            </ThemedText>
-            <Switch
-              value={autoSms}
-              onValueChange={(v) => {
-                setAutoSms(v);
-                saveAutoSmsOnAttendance(v);
-              }}
-            />
-          </View>
-
-          <TextField
-            label="Test number"
-            value={testNumber}
-            onChangeText={setTestNumber}
-            placeholder="10-digit mobile"
-            keyboardType="phone-pad"
-          />
-          <Button
-            label={testing ? "Sending\u2026" : "Send test SMS"}
-            variant="outlined"
-            onPress={handleTestSms}
-            loading={testing}
-          />
-          {testStatus ? (
-            <ThemedText
-              type="small"
-              themeColor="textSecondary"
-              style={styles.testStatus}
-            >
-              {testStatus}
-            </ThemedText>
-          ) : null}
         </View>
 
         <ThemedText
           type="label"
           themeColor="textSecondary"
-          style={styles.sectionLabel}
+          style={[styles.card, { marginBottom: Spacing.two }]}
         >
           DEVICE &amp; DATA
         </ThemedText>
@@ -216,10 +130,7 @@ export default function Settings() {
           ABOUT
         </ThemedText>
         <ListRow title="App version" subtitle="1.0.0" />
-        <ListRow
-          title="Fingerprint hardware"
-          subtitle="AS608 sensor via CH340 USB-UART"
-        />
+        <ListRow title="Fingerprint hardware" subtitle="AS608 sensor" />
       </PageContainer>
     </>
   );
@@ -233,7 +144,11 @@ const styles = StyleSheet.create({
     marginHorizontal: Spacing.four,
     marginBottom: Spacing.two,
   },
-  card: { paddingHorizontal: Spacing.four, gap: Spacing.one },
+  card: {
+    paddingHorizontal: Spacing.four,
+    gap: Spacing.one,
+    marginTop: Spacing.three,
+  },
   switchRow: {
     flexDirection: "row",
     alignItems: "center",

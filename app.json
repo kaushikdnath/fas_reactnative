@@ -22,7 +22,7 @@
       ]
     ],
     "android": {
-      "package": "com.kaushikdnath.fas",
+      "package": "com.kaushikdnath.ankitfas",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icons/adaptive-foreground.png",
         "backgroundColor": "#FFFFFF",
