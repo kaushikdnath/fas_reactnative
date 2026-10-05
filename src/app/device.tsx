@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
-import PageContainer from "@/components/PageContainer";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { AppBar } from "@/components/ui/AppBar";
@@ -103,8 +102,7 @@ export default function Device() {
   return (
     <ThemedView>
       <AppBar title="Fingerprint scanner" showBack />
-      <PageContainer></PageContainer>
-      <View style={styles.statusRow}>
+      <View style={[styles.statusRow, { paddingTop: 25 }]}>
         <Badge
           label={connected ? "Connected" : "Not connected"}
           tone={connected ? "success" : "neutral"}
