@@ -30,6 +30,7 @@ module.exports = {
     icon: "./assets/images/icons/icon.png",
     scheme: "attendance",
     userInterfaceStyle: "automatic",
+
     plugins: [
       "expo-router",
       "expo-sqlite",

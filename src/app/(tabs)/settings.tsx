@@ -96,6 +96,7 @@ export default function Settings() {
             label="Sim 1"
             selected={"sim1" == sim}
             onPress={() => setSim("sim1")}
+            styleCss={{ paddingBottom: Spacing.two, paddingTop: Spacing.two }}
           />
         </View>
 
