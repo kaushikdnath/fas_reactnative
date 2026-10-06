@@ -26,9 +26,31 @@ module.exports = {
   expo: {
     name: config.name,
     slug: "ankit-fas",
-
+    orientation: "portrait",
+    icon: "./assets/images/icons/icon.png",
+    scheme: "attendance",
+    userInterfaceStyle: "automatic",
+    plugins: [
+      "expo-router",
+      "expo-sqlite",
+      "./plugins/withAs608",
+      [
+        "expo-splash-screen",
+        {
+          image: "./assets/images/icons/splash-icon.png",
+          resizeMode: "contain",
+          backgroundColor: "#FFFFFF",
+          imageWidth: 220,
+        },
+      ],
+    ],
     android: {
       package: config.package,
+      adaptiveIcon: {
+        foregroundImage: "./assets/images/icons/adaptive-foreground.png",
+        backgroundColor: "#FFFFFF",
+        imageWidth: 100,
+      },
     },
 
     updates: {
