@@ -34,7 +34,7 @@ module.exports = {
     plugins: [
       "expo-router",
       "expo-sqlite",
-      "./plugins/withAs608",
+      "./plugins/withNative",
       [
         "expo-splash-screen",
         {

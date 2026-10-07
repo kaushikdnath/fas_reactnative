@@ -2,10 +2,31 @@ const {
   withMainApplication,
   withProjectBuildGradle,
   withAppBuildGradle,
+  withAndroidManifest,
 } = require("@expo/config-plugins");
-const fs = require("fs"),
-  path = require("path");
-module.exports = function withAs608(config) {
+
+module.exports = function withNative(config) {
+  config = withAndroidManifest(config, (config) => {
+    const manifest = config.modResults.manifest;
+    if (!manifest["uses-permission"]) {
+      manifest["uses-permission"] = [];
+    }
+    const permissions = manifest["uses-permission"];
+    const addPermission = (permission) => {
+      if (!permissions.some((p) => p.$?.["android:name"] === permission)) {
+        permissions.push({
+          $: {
+            "android:name": permission,
+          },
+        });
+      }
+    };
+    addPermission("android.permission.READ_PHONE_STATE");
+    addPermission("android.permission.SEND_SMS");
+
+    return config;
+  });
+
   config = withMainApplication(config, (config) => {
     const p = config.modResults.contents;
     let out = p;
@@ -14,25 +35,29 @@ module.exports = function withAs608(config) {
         /(package\s+[^\n]+\n)/,
         "$1import com.as608.reactnative.AS608Package\n",
       );
+
     if (!out.includes("AS608Package()"))
       out = out.replace(
         /(PackageList\(this\)\.packages)/,
         "$1.apply { add(AS608Package()) }",
       );
-    if (!out.includes("com.as608.reactnative.SmsPackage"))
+
+    if (!out.includes("com.as608.reactnative.SimInfoPackage"))
       out = out.replace(
         /(package\s+[^\n]+\n)/,
-        "$1import com.as608.reactnative.SmsPackage\n",
+        "$1import com.as608.reactnative.SimInfoPackage\n",
       );
 
-    if (!out.includes("SmsPackage()"))
+    if (!out.includes("SimInfoPackage()"))
       out = out.replace(
         /(PackageList\(this\)\.packages)/,
-        "$1.apply { add(AS608Package()); add(SmsPackage()) }",
+        "$1.apply { add(SimInfoPackage()) }",
       );
+
     config.modResults.contents = out;
     return config;
   });
+
   config = withProjectBuildGradle(config, (config) => {
     let c = config.modResults.contents;
     if (!c.includes("mavenCentral()"))

@@ -7,7 +7,7 @@ import PageContainer from "@/components/PageContainer";
 import { ThemedText } from "@/components/themed-text";
 import { AppBar } from "@/components/ui/AppBar";
 import { Button } from "@/components/ui/button";
-import { Chip } from "@/components/ui/chip";
+import { ChipRow } from "@/components/ui/chip";
 import { ListRow } from "@/components/ui/list-row";
 import { TextField } from "@/components/ui/text-field";
 import { Spacing } from "@/constants/theme";
@@ -16,6 +16,7 @@ import {
   getInstitutionName,
   getSmsConfig,
   saveInstitutionName,
+  saveSmsConfig,
 } from "@/services/settings";
 
 export default function Settings() {
@@ -23,18 +24,18 @@ export default function Settings() {
   const { mode, setMode, palette, setPalette } = useThemeMode();
 
   const [institutionName, setInstitutionName] = useState("");
-  const [baseUrl, setBaseUrl] = useState("");
-  const [token, setToken] = useState("");
-  const [sim, setSim] = useState("sim1");
+  const [selectedSIM, setSelectedSIM] = useState("1");
 
   useEffect(() => {
     getInstitutionName().then(setInstitutionName);
     getSmsConfig().then((c) => {
-      setBaseUrl(c.baseUrl);
-      setToken(c.token);
+      setSelectedSIM(c.selectedSIM);
     });
   }, []);
-
+  const saveSelectedSim = async (sim: string) => {
+    await saveSmsConfig(sim);
+    setSelectedSIM(sim);
+  };
   return (
     <>
       <AppBar title="Settings" subtitle="Configure app preferences" />
@@ -53,23 +54,15 @@ export default function Settings() {
             paddingHorizontal: Spacing.three,
           }}
         >
-          <Chip
-            key="system"
-            label="System"
-            selected={"system" == mode}
-            onPress={() => setMode("system")}
-          />
-          <Chip
-            key="light"
-            label="Light"
-            selected={"light" == mode}
-            onPress={() => setMode("light")}
-          />
-          <Chip
-            key="dark"
-            label="Dark"
-            selected={"dark" == mode}
-            onPress={() => setMode("dark")}
+          <ChipRow
+            options={[
+              { label: "System", value: "system" },
+              { label: "Light", value: "light" },
+              { label: "Dark", value: "dark" },
+            ]}
+            selected={mode}
+            onSelect={setMode}
+            styleCss={{ gap: 0 }}
           />
         </View>
 
@@ -91,12 +84,15 @@ export default function Settings() {
           SIM FOR SENDING SMS
         </ThemedText>
         <View style={styles.card}>
-          <Chip
-            key="sim1"
-            label="Sim 1"
-            selected={"sim1" == sim}
-            onPress={() => setSim("sim1")}
-            styleCss={{ paddingBottom: Spacing.two, paddingTop: Spacing.two }}
+          <ChipRow
+            options={[
+              { label: "Sim1", value: "1" },
+              { label: "Sim2", value: "2" },
+            ]}
+            selected={selectedSIM}
+            onSelect={saveSelectedSim}
+            styleCss={{ flex: 1 }}
+            chipStyleCss={{ flex: 1, height: 40 }}
           />
         </View>
 

@@ -141,6 +141,7 @@ export default function StudentList() {
             options={batchOptions.filter((b) => b.value !== "all")}
             selected={batchFilter}
             onSelect={setBatchFilter}
+            direction="col"
           />
         </View>
         <View
@@ -154,7 +155,6 @@ export default function StudentList() {
             options={statusOptions}
             selected={statusFilter}
             onSelect={setStatusFilter}
-            styleCss={{ flexDirection: "row" }}
           />
         </View>
 

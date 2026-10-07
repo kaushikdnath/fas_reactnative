@@ -64,8 +64,8 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 20, fontWeight: "700", lineHeight: 26 },
   body: { fontSize: 15, lineHeight: 22, fontWeight: "400" },
   bodyBold: { fontSize: 15, lineHeight: 22, fontWeight: "700" },
-  small: { fontSize: 11, lineHeight: 10, fontWeight: "500" },
-  smallBold: { fontSize: 11, lineHeight: 10, fontWeight: "700" },
+  small: { fontSize: 11, lineHeight: 15, fontWeight: "500" },
+  smallBold: { fontSize: 11, lineHeight: 15, fontWeight: "700" },
   label: {
     fontSize: 12,
     lineHeight: 16,

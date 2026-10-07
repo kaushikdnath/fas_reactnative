@@ -2,13 +2,29 @@ import { NativeTabs } from "expo-router/unstable-native-tabs";
 
 import { useTheme } from "@/hooks/use-theme";
 
-/**
- * Native bottom tab bar (Android: Material 3 BottomNavigationView,
- * powered by expo-router's native-tabs integration) -- styled with the
- * dynamic theme tokens for seamless dark/light and palette switching.
- */
+import { useEffect } from "react";
+import { NativeModules } from "react-native";
+
+const { SimInfo } = NativeModules;
+
 export default function TabLayout() {
   const colors = useTheme();
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      try {
+        const hasPermission = await SimInfo.hasSmsPermission();
+
+        if (!hasPermission) {
+          await SimInfo.requestSmsPermission();
+        }
+      } catch (error) {
+        console.error("SMS permission error:", error);
+      }
+    };
+
+    requestPermissions();
+  }, []);
 
   return (
     <NativeTabs

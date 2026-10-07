@@ -9,7 +9,7 @@ import { AppBar } from "@/components/ui/AppBar";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Chip } from "@/components/ui/chip";
+import { ChipRow } from "@/components/ui/chip";
 import { ListRow } from "@/components/ui/list-row";
 import { SearchBar } from "@/components/ui/search-bar";
 import { EmptyStateView } from "@/components/ui/state-views";
@@ -163,19 +163,15 @@ export default function Attendance() {
             paddingHorizontal: Spacing.three,
           }}
         >
-          <Chip
-            label="Fingerprint scan"
-            key="scan"
-            selected={mode === "scan"}
-            onPress={() => setMode("scan")}
-            styleCss={{ flex: 1, width: "auto", height: 40 }}
-          />
-          <Chip
-            label="Manual entry"
-            key="manual"
-            selected={mode === "manual"}
-            onPress={() => setMode("manual")}
-            styleCss={{ flex: 1, width: "auto", height: 40 }}
+          <ChipRow
+            options={[
+              { label: "Fingerprint scan", value: "scan" },
+              { label: "Manual entry", value: "manual" },
+            ]}
+            selected={mode}
+            onSelect={setMode}
+            styleCss={{ flex: 1 }}
+            chipStyleCss={{ flex: 1, height: 40 }}
           />
         </View>
 

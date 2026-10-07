@@ -54,21 +54,30 @@ export function ChipRow<T extends string | number>({
   selected,
   onSelect,
   styleCss = {},
+  chipStyleCss = {},
+  direction = "row",
 }: {
   options: Array<{ value: T; label: string }>;
   selected: T;
   onSelect: (v: T) => void;
   styleCss?: StyleProp<ViewStyle>;
+  chipStyleCss?: StyleProp<ViewStyle>;
+  direction?: "row" | "col";
 }) {
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-      <View style={[styles.row, styleCss]}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={{ minWidth: "100%" }}
+    >
+      <View style={[styles[direction], styleCss]}>
         {options.map((o) => (
           <Chip
             key={String(o.value)}
             label={o.label}
             selected={o.value === selected}
             onPress={() => onSelect(o.value)}
+            styleCss={chipStyleCss}
           />
         ))}
       </View>
@@ -87,12 +96,19 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: Spacing.two,
   },
-  row: {
-    // paddingHorizontal: Spacing.four,
+  col: {
     paddingBottom: Spacing.two,
     flexDirection: "column",
     flexWrap: "wrap",
+    maxHeight: 70,
+    gap: 10,
+  },
+  row: {
+    paddingBottom: Spacing.two,
+    flexDirection: "row",
+    flexWrap: "wrap",
     maxHeight: 60,
     gap: 10,
+    width: "100%",
   },
 });
