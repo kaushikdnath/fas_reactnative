@@ -13,6 +13,8 @@ export type ThemedTextProps = TextProps & {
     | "bodyBold"
     | "small"
     | "smallBold"
+    | "smaller"
+    | "smallerBold"
     | "label"
     | "link"
     | "linkPrimary"
@@ -43,6 +45,8 @@ export function ThemedText({
         type === "bodyBold" && styles.bodyBold,
         type === "small" && styles.small,
         type === "smallBold" && styles.smallBold,
+        type === "smaller" && styles.smaller,
+        type === "smallerBold" && styles.smallerBold,
         type === "label" && styles.label,
         type === "link" && styles.link,
         type === "linkPrimary" && [
@@ -66,6 +70,8 @@ const styles = StyleSheet.create({
   bodyBold: { fontSize: 15, lineHeight: 22, fontWeight: "700" },
   small: { fontSize: 11, lineHeight: 15, fontWeight: "500" },
   smallBold: { fontSize: 11, lineHeight: 15, fontWeight: "700" },
+  smaller: { fontSize: 9, lineHeight: 15, fontWeight: "500" },
+  smallerBold: { fontSize: 9, lineHeight: 15, fontWeight: "700" },
   label: {
     fontSize: 12,
     lineHeight: 16,

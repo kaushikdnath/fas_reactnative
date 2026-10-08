@@ -13,11 +13,13 @@ import { useTheme } from "@/hooks/use-theme";
 
 export function Chip({
   label,
+  subLabel,
   selected = false,
   onPress,
   styleCss = {},
 }: {
   label: string;
+  subLabel?: string;
   selected?: boolean;
   onPress?: () => void;
   styleCss?: StyleProp<ViewStyle>;
@@ -37,14 +39,26 @@ export function Chip({
         styleCss,
       ]}
     >
-      <ThemedText
-        type="small"
-        style={{
-          color: selected ? theme.onPrimaryContainer : theme.textSecondary,
-        }}
-      >
-        {label}
-      </ThemedText>
+      <View style={{ flexDirection: "column" }}>
+        <ThemedText
+          type="small"
+          style={{
+            color: selected ? theme.onPrimaryContainer : theme.textSecondary,
+          }}
+        >
+          {label}
+        </ThemedText>
+        {subLabel && (
+          <ThemedText
+            type="smaller"
+            style={{
+              color: selected ? theme.onPrimaryContainer : theme.textSecondary,
+            }}
+          >
+            {subLabel}
+          </ThemedText>
+        )}
+      </View>
     </Pressable>
   );
 }
@@ -57,7 +71,7 @@ export function ChipRow<T extends string | number>({
   chipStyleCss = {},
   direction = "row",
 }: {
-  options: Array<{ value: T; label: string }>;
+  options: Array<{ value: T; label: string; subLabel?: string }>;
   selected: T;
   onSelect: (v: T) => void;
   styleCss?: StyleProp<ViewStyle>;
@@ -75,6 +89,7 @@ export function ChipRow<T extends string | number>({
           <Chip
             key={String(o.value)}
             label={o.label}
+            subLabel={o.subLabel}
             selected={o.value === selected}
             onPress={() => onSelect(o.value)}
             styleCss={chipStyleCss}

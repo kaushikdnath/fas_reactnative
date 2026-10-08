@@ -155,6 +155,7 @@ export default function StudentList() {
             options={statusOptions}
             selected={statusFilter}
             onSelect={setStatusFilter}
+            styleCss={{ gap: 2 }}
           />
         </View>
 

@@ -18,6 +18,9 @@ import {
   saveInstitutionName,
   saveSmsConfig,
 } from "@/services/settings";
+import { NativeModules } from "react-native";
+
+const { SimInfo } = NativeModules;
 
 export default function Settings() {
   const insets = useSafeAreaInsets();
@@ -25,9 +28,16 @@ export default function Settings() {
 
   const [institutionName, setInstitutionName] = useState("");
   const [selectedSIM, setSelectedSIM] = useState("1");
+  const [activeSIMS, setActiveSIMS] = useState([]);
 
   useEffect(() => {
     getInstitutionName().then(setInstitutionName);
+
+    const getActiveSIMs = async () => {
+      const sims = await SimInfo.getActiveSims();
+      setActiveSIMS(sims);
+    };
+    getActiveSIMs();
     getSmsConfig().then((c) => {
       setSelectedSIM(c.selectedSIM);
     });
@@ -85,10 +95,12 @@ export default function Settings() {
         </ThemedText>
         <View style={styles.card}>
           <ChipRow
-            options={[
-              { label: "Sim1", value: "1" },
-              { label: "Sim2", value: "2" },
-            ]}
+            options={activeSIMS.map((s) => {
+              return {
+                label: `${s["displayName"]} (SIM ${(s["slotIndex"] ?? 0) + 1})`,
+                value: s["subscriptionId"] + "",
+              };
+            })}
             selected={selectedSIM}
             onSelect={saveSelectedSim}
             styleCss={{ flex: 1 }}
