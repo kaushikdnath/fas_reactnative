@@ -1,19 +1,21 @@
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, Modal, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import PageContainer from "@/components/PageContainer";
 import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
 import { AppBar } from "@/components/ui/AppBar";
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChipRow } from "@/components/ui/chip";
+import Clock from "@/components/ui/Clock";
 import { ListRow } from "@/components/ui/list-row";
 import { SearchBar } from "@/components/ui/search-bar";
 import { EmptyStateView } from "@/components/ui/state-views";
-import { Spacing } from "@/constants/theme";
+import { Radius, Spacing } from "@/constants/theme";
 import { recordScan, todayAttendance } from "@/data/attendance-repository";
 import { logAudit } from "@/data/audit-repository";
 import { findStudentBySlot, listStudents } from "@/data/student-repository";
@@ -42,6 +44,11 @@ export default function Attendance() {
   const [searchResults, setSearchResults] = useState<Student[]>([]);
 
   const [today, setToday] = useState<AttendanceRecord[]>([]);
+  const [busy, setBusy] = useState(false);
+  const [manualPickVisible, setManualVisible] = useState(false);
+  const [manualPick, setManualPicked] = useState<Student | undefined>(
+    undefined,
+  );
 
   const loadToday = useCallback(async () => {
     const result = await todayAttendance();
@@ -146,7 +153,7 @@ export default function Attendance() {
     }
   };
 
-  const handleManualPick = async (student: Student) => {
+  const markAttendance = async (student: Student) => {
     await finalizeAttendance(student, null);
     setQuery("");
     setSearchResults([]);
@@ -207,15 +214,18 @@ export default function Attendance() {
             <SearchBar
               value={query}
               onChangeText={setQuery}
-              placeholder="Search name, code, or guardian mobile"
+              placeholder="Search name, code, guardian mobile or batch"
             />
             {searchResults.map((s) => (
               <ListRow
                 key={s.id}
                 title={s.name}
-                subtitle={`${s.code} \u00B7 ${s.batchName ?? ""}`}
+                subtitle={`${s.code} - ${s.batchName ?? ""}`}
                 leading={<Avatar name={s.name} uri={s.photoUri} size={40} />}
-                onPress={() => handleManualPick(s)}
+                onPress={() => {
+                  setManualVisible(true);
+                  setManualPicked(s);
+                }}
               />
             ))}
           </View>
@@ -255,6 +265,49 @@ export default function Attendance() {
           />
         )}
       </PageContainer>
+      <Modal
+        visible={manualPickVisible}
+        transparent
+        animationType="fade"
+        statusBarTranslucent
+        navigationBarTranslucent
+        hardwareAccelerated
+        onRequestClose={() => setManualVisible(false)}
+        onBlur={() => setManualVisible(false)}
+      >
+        <View style={styles.backdrop}>
+          <ThemedView type="surface" style={styles.card}>
+            <ThemedText type="subtitle" style={styles.title}>
+              Mark Attendance ?
+            </ThemedText>
+            <View style={{ alignItems: "center" }}>
+              <Clock />
+            </View>
+            <View style={styles.actions}>
+              <Button
+                label="IN"
+                variant="filled"
+                onPress={() => {}}
+                loading={busy}
+                style={styles.actionBtn}
+              />
+              <Button
+                label="OUT"
+                variant="danger"
+                onPress={() => {}}
+                loading={busy}
+                style={styles.actionBtn}
+              />
+            </View>
+            <Button
+              label="Cancel"
+              variant="text"
+              onPress={() => setManualVisible(false)}
+              style={{ minWidth: 80, marginTop: 10 }}
+            />
+          </ThemedView>
+        </View>
+      </Modal>
     </>
   );
 }
@@ -280,4 +333,22 @@ const styles = StyleSheet.create({
     marginBottom: Spacing.two,
   },
   list: { paddingBottom: 96 },
+  backdrop: {
+    ...StyleSheet.absoluteFill,
+    flex: 1,
+    width: "100%",
+    height: "100%",
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    padding: Spacing.four,
+  },
+  card: { borderRadius: Radius.xlarge, padding: Spacing.four },
+  title: { marginBottom: Spacing.three },
+  actions: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    gap: Spacing.two,
+    marginTop: Spacing.three,
+  },
+  actionBtn: { minWidth: 100 },
 });

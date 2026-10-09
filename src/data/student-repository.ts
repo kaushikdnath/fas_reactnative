@@ -43,7 +43,7 @@ function mapRow(r: StudentRow): Student {
 }
 
 const BASE_SELECT = `
-  SELECT s.*, b.name batch_name,
+  SELECT s.*, b.name batch_name, b.academic_year,
     (SELECT COUNT(*) FROM fingerprints f WHERE f.student_id = s.id) fingerprint_count
   FROM students s LEFT JOIN batches b ON b.id = s.batch_id`;
 

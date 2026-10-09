@@ -309,16 +309,20 @@ export default function StudentDetail() {
         onConfirm={handleDeleteStudent}
       >
         <ThemedText type="body" style={styles.dialogBody}>
-          {student.name} will be removed. Choose what else to remove:
+          {student.name} will be removed along with:
         </ThemedText>
         <ToggleRow
           label="Attendance history"
-          value={cascadeAttendance}
+          // value={cascadeAttendance}
+          value={true}
+          disabed={true}
           onChange={setCascadeAttendance}
         />
         <ToggleRow
           label="Fingerprint templates"
-          value={cascadeFingerprints}
+          // value={cascadeFingerprints}
+          value={true}
+          disabed={true}
           onChange={setCascadeFingerprints}
         />
       </ConfirmDialog>
@@ -344,14 +348,17 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 function ToggleRow({
   label,
   value,
+  disabed = false,
   onChange,
 }: {
   label: string;
   value: boolean;
+  disabed?: boolean;
   onChange: (v: boolean) => void;
 }) {
   return (
     <Pressable
+      disabled={disabed}
       style={styles.toggleRow}
       onPress={() => onChange(!value)}
       accessibilityRole="checkbox"

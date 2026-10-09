@@ -20,7 +20,7 @@ export function SearchBar({
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor={theme.outline}
-        style={[styles.input, { color: theme.text, fontSize: 15 }]}
+        style={[styles.input, { color: theme.text, fontSize: 12 }]}
         autoCapitalize="none"
       />
     </View>
